@@ -49,6 +49,7 @@
       "WebFetch(domain:*)",
       "WebSearch",
       "Write(.mgzl/*)",
+      "Read(.mgzl/*)",
       "Bash(/Users/otto/.claude/skills/web-search-with-codex/scripts/codex_search.sh:*)"
     ],
     "deny": [
