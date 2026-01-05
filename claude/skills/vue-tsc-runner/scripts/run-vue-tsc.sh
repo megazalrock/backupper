@@ -1,0 +1,1 @@
+NODE_OPTIONS=--max_old_space_size=8192 vue-tsc --noEmit --skipLibCheck --pretty false -p tsconfig.mgzl.json | grep -v '^[[:space:]]'
