@@ -54,7 +54,8 @@
       "WebFetch(domain:*)",
       "WebFetch(domain:docs.claude.com)",
       "WebSearch",
-      "Write(.mgzl/**/*)"
+      "Write(.mgzl/**/*)",
+      "Bash(.claude/skills/vue-tsc-runner/scripts/run-vue-tsc.sh)"
     ],
     "deny": [
       "mcp__jetbrains__execute_terminal_command",
