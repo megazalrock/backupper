@@ -1,11 +1,17 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+`/Users/otto/workspace/craftbank/arrangement-env/front` 内の指定したファイルを `./files/` にコピーしgitでの管理をするためのリポジトリです。
 
-## リポジトリの目的
+## 構成
 
-このリポジトリは、`/Users/otto/workspace/craftbank/arrangement-env/front` プロジェクトでは `.gitignore` に追加されている `.claude` ディレクトリと `.mgzl` ディレクトリを一元管理するためのものです。
+- `docs/task-list.md` タスク一覧
+- `docks/tasks/` タスクごとの仕様書
+- `files/` コピーされたファイルを保存するディレクトリ
+- `scripts/` コピーを実行する `.ts` のスクリプト
+- `config.ts` コピー設定を管理するファイル
+- `.claude/agents/copy-and-commit.md` コピーをしてコミットを行うサブエージェント
 
-## 注意事項
+## 技術
 
-`claude/` および `mgzl/` ディレクトリの内容は、このリポジトリ内で Claude Code が直接操作・参照する対象ではありません。これらは対象プロジェクトにコピーして使用するための設定・ドキュメントファイルです。
+- 言語: TypeScript
+- 実行環境: Bun
