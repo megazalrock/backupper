@@ -5,7 +5,7 @@
 ## 構成
 
 - `docs/task-list.md` タスク一覧
-- `docks/tasks/` タスクごとの仕様書
+- `docs/tasks/` タスクごとの仕様書
 - `files/` コピーされたファイルを保存するディレクトリ
 - `scripts/` コピーを実行する `.ts` のスクリプト
 - `config.ts` コピー設定を管理するファイル
@@ -15,3 +15,7 @@
 
 - 言語: TypeScript
 - 実行環境: Bun
+
+## ツール
+
+- ユーザーに選択肢を選ばせる場合は `AskUserQuestion` を利用する
