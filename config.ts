@@ -1,4 +1,4 @@
-import type { Config } from 'types/config.ts'
+import type { Config } from 'src/types/config.ts'
 
 /**
  * コピー設定

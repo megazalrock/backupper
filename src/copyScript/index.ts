@@ -1,7 +1,8 @@
 import { existsSync, mkdirSync, readdirSync } from "node:fs"
 import { basename, dirname, join, relative } from "node:path"
-import type { Config } from "types/config.ts"
-import { DEFAULT_CONFIG_PATH, loadConfig, validateConfig } from "./config-loader.ts"
+import type { Config } from "../types/config.ts"
+import { loadConfig, validateConfig } from "../modules/ConfigLoader.ts"
+import { parseArgs, showHelp, type CliOptions } from "../modules/ParseCliArguments.ts"
 
 // ============================================
 // 定数
@@ -18,53 +19,6 @@ interface CopyResult {
   source: string
   destination: string
   error?: string
-}
-
-interface CliOptions {
-  configPath: string
-}
-
-// ============================================
-// コマンドライン引数パーサー
-// ============================================
-
-/**
- * ヘルプメッセージを表示する
- */
-function showHelp(): void {
-  console.log(`
-使用方法: bun run scripts/copy-script/index.ts [オプション]
-
-オプション:
-  --config, -c <パス>  設定ファイルのパスを指定（デフォルト: ${DEFAULT_CONFIG_PATH}）
-  --help, -h           このヘルプを表示
-`)
-}
-
-/**
- * コマンドライン引数を解析する
- */
-function parseArgs(args: string[]): CliOptions | null {
-  const options: CliOptions = {
-    configPath: DEFAULT_CONFIG_PATH,
-  }
-
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i]
-    if (arg === "--help" || arg === "-h") {
-      showHelp()
-      return null
-    } else if (arg === "--config" || arg === "-c") {
-      const nextArg = args[i + 1]
-      if (!nextArg || nextArg.startsWith("-")) {
-        throw new Error("--config オプションには設定ファイルのパスが必要です")
-      }
-      options.configPath = nextArg
-      i++ // 次の引数をスキップ
-    }
-  }
-
-  return options
 }
 
 // ============================================
@@ -234,7 +188,7 @@ function logSummary(results: CopyResult[]): void {
 // メイン処理
 // ============================================
 
-async function main(): Promise<void> {
+export async function main(): Promise<void> {
   // 1. コマンドライン引数を解析
   const args = process.argv.slice(2)
   let options: CliOptions
@@ -307,9 +261,3 @@ async function main(): Promise<void> {
   // 6. サマリー出力
   logSummary(results)
 }
-
-// 実行
-main().catch((error) => {
-  console.error("予期せぬエラーが発生しました:", error)
-  process.exit(1)
-})
