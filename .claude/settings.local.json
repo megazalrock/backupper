@@ -1,15 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "mcp__jetbrains__list_directory_tree",
+      "mcp__jetbrains",
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(cat:*)",
       "Bash(cp -rp:*)",
       "Read(/Users/otto/workspace/craftbank/arrangement-env/front/.claude/**/*)",
       "Read(/Users/otto/workspace/craftbank/arrangement-env/front/.mgzl/**/*)",
-      "Bash(bun run:*)",
-      "mcp__jetbrains__get_file_problems"
+      "Bash(bun run:*)"
     ]
   }
 }

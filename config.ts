@@ -5,6 +5,7 @@ import type { Config } from 'src/types/config.ts'
  */
 export const config: Config = {
   base: "/Users/otto/workspace/craftbank/arrangement-env/front",
+  outputDir: "files",
   targetFiles: [
     ".claude/",
     ".mgzl/",

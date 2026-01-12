@@ -39,4 +39,8 @@ export function validateConfig(cfg: Config): void {
   if (!existsSync(cfg.base)) {
     throw new Error(`ベースパスが存在しません: ${cfg.base}`)
   }
+
+  if (!cfg.outputDir || cfg.outputDir.trim() === "") {
+    throw new Error("outputDir が指定されていません")
+  }
 }

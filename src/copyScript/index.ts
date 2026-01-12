@@ -5,12 +5,6 @@ import { loadConfig, validateConfig } from "../modules/ConfigLoader.ts"
 import { parseArgs, showHelp, type CliOptions } from "../modules/ParseCliArguments.ts"
 
 // ============================================
-// 定数
-// ============================================
-
-const OUTPUT_DIR = "files"
-
-// ============================================
 // 型定義
 // ============================================
 
@@ -250,7 +244,7 @@ export async function main(): Promise<void> {
     // パス変換
     const convertedPath = convertDotPath(relativePath)
     const sourcePath = join(config.base, relativePath)
-    const destPath = join(OUTPUT_DIR, convertedPath)
+    const destPath = join(config.outputDir, convertedPath)
 
     // コピー実行
     const result = await copyFile(sourcePath, destPath)

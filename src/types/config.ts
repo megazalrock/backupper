@@ -4,6 +4,8 @@
 export interface Config {
   /** コピー元のベースパス（絶対パス） */
   base: string
+  /** コピー先の出力ディレクトリ（相対パスまたは絶対パス） */
+  outputDir: string
   /** コピー対象の相対パス。末尾が `/` の場合はディレクトリ全体 */
   targetFiles: string[]
   /** 除外するファイル/ディレクトリのパターン（glob形式） */
