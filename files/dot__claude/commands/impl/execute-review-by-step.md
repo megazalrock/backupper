@@ -4,7 +4,7 @@ description: 実装計画書を実行
 
 以下の手順で実装計画書を実行してください
 
-1. `ls -l .mgzl/implementations | tail -n1` で最新の実装計画書を取得
+1. `ls -l -s time .mgzl/implementations | tail -n1` で最新の実装計画書を取得
 2. `AskUserQuestion` でこの実装計画書で良いか `ファイル名: 概要` の形式でユーザーに確認
 3. 選択された実装計画書のステップが全て完了しているかチェック
    - 全て完了していたら、既に実装済みである旨をユーザーに通知

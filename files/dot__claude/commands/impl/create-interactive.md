@@ -8,6 +8,10 @@ argument-hint: [what to do]
 
 ## タスク
 
+**IMPORTANT**: 実装を開始するには**必ず**ユーザーが一度実装計画書を確認します。
+
+実装内容が指定されていない場合は、ユーザーに確認をしてください。
+
 1. $ARGUMENTS についてので実装計画書を書くための情報を AskUserQuestion を利用して対話形式で収集する
 2. 収集した情報を元に @implementation-plan-creator エージェントを利用して実装計画書を作成する
 3. 作成した実装計画書の不明点を @implementation-plan-investigator エージェントを利用して解決する
