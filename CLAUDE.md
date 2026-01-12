@@ -4,12 +4,12 @@
 
 ## 構成
 
-- `docs/task-list.md` タスク一覧
-- `docs/tasks/` タスクごとの仕様書
 - `files/` コピーされたファイルを保存するディレクトリ
-- `scripts/` コピーを実行する `.ts` のスクリプト
+- `src/copyScript/index.ts` コピーを実行する `.ts` のスクリプト
+- `src/modules/ConfigLoader.ts` configファイルの読み込みなどをするモジュール
+- `src/modules/ParseCliArguments.ts` コマンドライン引数のパースを行うモジュール
+- `scripts/copyScript.ts` コピーを実行する `.ts` のスクリプト
 - `config.ts` コピー設定を管理するファイル
-- `.claude/agents/copy-and-commit.md` コピーをしてコミットを行うサブエージェント
 
 ## 技術
 
