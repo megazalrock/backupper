@@ -18,6 +18,8 @@ export const config: Config = {
   targetFiles: [
     ".claude/",
     ".mgzl/",
+    ".mcp.json",
+    "tsconfig.mgzl.json"
   ],
   exclude: [
     "node_modules",
