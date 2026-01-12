@@ -1,6 +1,5 @@
-import { existsSync, mkdirSync, readdirSync, statSync } from "node:fs"
-import { basename, dirname, join, relative } from "node:path"
-import { config } from "../../config"
+import { existsSync, mkdirSync, readdirSync } from "node:fs"
+import { basename, dirname, join, relative, resolve } from "node:path"
 import type { Config } from 'types/config.ts'
 
 // ============================================
@@ -8,6 +7,7 @@ import type { Config } from 'types/config.ts'
 // ============================================
 
 const OUTPUT_DIR = "files"
+const DEFAULT_CONFIG_PATH = "config.ts"
 
 // ============================================
 // 型定義
@@ -20,9 +20,76 @@ interface CopyResult {
   error?: string
 }
 
+interface CliOptions {
+  configPath: string
+}
+
+// ============================================
+// コマンドライン引数パーサー
+// ============================================
+
+/**
+ * ヘルプメッセージを表示する
+ */
+function showHelp(): void {
+  console.log(`
+使用方法: bun run scripts/copy-script/index.ts [オプション]
+
+オプション:
+  --config, -c <パス>  設定ファイルのパスを指定（デフォルト: ${DEFAULT_CONFIG_PATH}）
+  --help, -h           このヘルプを表示
+`)
+}
+
+/**
+ * コマンドライン引数を解析する
+ */
+function parseArgs(args: string[]): CliOptions | null {
+  const options: CliOptions = {
+    configPath: DEFAULT_CONFIG_PATH,
+  }
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i]
+    if (arg === "--help" || arg === "-h") {
+      showHelp()
+      return null
+    } else if (arg === "--config" || arg === "-c") {
+      const nextArg = args[i + 1]
+      if (!nextArg || nextArg.startsWith("-")) {
+        throw new Error("--config オプションには設定ファイルのパスが必要です")
+      }
+      options.configPath = nextArg
+      i++ // 次の引数をスキップ
+    }
+  }
+
+  return options
+}
+
 // ============================================
 // 設定読み込みモジュール
 // ============================================
+
+/**
+ * 設定ファイルを動的に読み込む
+ */
+async function loadConfig(configPath: string): Promise<Config> {
+  const absolutePath = resolve(configPath)
+
+  if (!existsSync(absolutePath)) {
+    throw new Error(`設定ファイルが見つかりません: ${absolutePath}`)
+  }
+
+  const module = await import(absolutePath)
+  const config = module.config as Config | undefined
+
+  if (!config) {
+    throw new Error(`設定ファイルに config がエクスポートされていません: ${absolutePath}`)
+  }
+
+  return config
+}
 
 /**
  * 設定のバリデーションを行う
@@ -201,10 +268,41 @@ function logSummary(results: CopyResult[]): void {
 // ============================================
 
 async function main(): Promise<void> {
+  // 1. コマンドライン引数を解析
+  const args = process.argv.slice(2)
+  let options: CliOptions
+
+  try {
+    const parsed = parseArgs(args)
+    if (parsed === null) {
+      // ヘルプ表示の場合は終了
+      process.exit(0)
+    }
+    options = parsed
+  } catch (error) {
+    console.error(
+      `エラー: ${error instanceof Error ? error.message : String(error)}`
+    )
+    showHelp()
+    process.exit(1)
+  }
+
   console.log("コピースクリプトを開始します...")
+  console.log(`設定ファイル: ${options.configPath}`)
   console.log("")
 
-  // 1. 設定のバリデーション
+  // 2. 設定ファイルを読み込み
+  let config: Config
+  try {
+    config = await loadConfig(options.configPath)
+  } catch (error) {
+    console.error(
+      `エラー: ${error instanceof Error ? error.message : String(error)}`
+    )
+    process.exit(1)
+  }
+
+  // 3. 設定のバリデーション
   try {
     validateConfig(config)
   } catch (error) {
@@ -214,12 +312,12 @@ async function main(): Promise<void> {
     process.exit(1)
   }
 
-  // 2. ファイル一覧を取得
+  // 4. ファイル一覧を取得
   const targetFiles = resolveTargetFiles(config)
   console.log(`対象ファイル数: ${targetFiles.length}`)
   console.log("")
 
-  // 3. コピー実行
+  // 5. コピー実行
   const results: CopyResult[] = []
 
   for (const relativePath of targetFiles) {
@@ -239,7 +337,7 @@ async function main(): Promise<void> {
     logResult(result)
   }
 
-  // 4. サマリー出力
+  // 6. サマリー出力
   logSummary(results)
 }
 
