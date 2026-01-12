@@ -11,11 +11,21 @@
 - `src/types/config.ts` コピー設定の型定義
 - `scripts/copyScript.ts` コピーを実行する `.ts` のスクリプト
 - `config.ts` コピー設定を管理するファイル
+- `types/` 型定義
 
 ## 技術
 
 - 言語: TypeScript
 - 実行環境: Bun
+
+## 命名規則
+
+- 関数名は `camelCase` で記述する
+- 変数名は `camelCase` で記述する
+- クラス名は `PascalCase` で記述する
+- インターフェース名は `PascalCase` で記述する
+- 型名は `PascalCase` で記述する
+- `index.ts` は全て小文字で記述する
 
 ## ツール
 
