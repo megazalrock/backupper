@@ -1,5 +1,7 @@
 ---
-paths: **/*.{ts,vue}
+paths:
+  - "**/*.{ts,vue}"
+  - "!**/*.test.ts"
 ---
 
 # 型ガードユーティリティ (`utils/Type.ts`)
