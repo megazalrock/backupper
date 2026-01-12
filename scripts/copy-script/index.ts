@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readdirSync, statSync } from "node:fs"
 import { basename, dirname, join, relative } from "node:path"
-import { config, type Config } from "../../config"
+import { config } from "../../config"
+import type { Config } from 'types/config.ts'
 
 // ============================================
 // 定数
