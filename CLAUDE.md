@@ -4,14 +4,13 @@
 
 ## 構成
 
-- `files/` コピーされたファイルを保存するディレクトリ
+- `files/` コピーされたファイルを保存するディレクトリ（実行時に作成）
 - `src/copyScript/index.ts` コピーを実行する `.ts` のスクリプト
 - `src/modules/ConfigLoader.ts` configファイルの読み込みなどをするモジュール
 - `src/modules/ParseCliArguments.ts` コマンドライン引数のパースを行うモジュール
 - `src/types/config.ts` コピー設定の型定義
 - `scripts/copyScript.ts` コピーを実行する `.ts` のスクリプト
-- `config.ts` コピー設定を管理するファイル
-- `types/` 型定義
+- `config.example.ts` コピー設定のテンプレート（`config.ts`にコピーして使用）
 
 ## 技術
 
