@@ -6,7 +6,7 @@ import type { Config } from 'src/types/config.ts'
 export const config: Config = {
   base: "/Users/otto/workspace/craftbank/arrangement-env/front",
   outputDir: "files",
-  targetFiles: [
+  includes: [
     // ディレクトリ全体（末尾 / ）
     ".claude/",
     ".mgzl/",
@@ -21,7 +21,7 @@ export const config: Config = {
     // "docs/*.md",          // docs 直下の .md ファイル
     // "config/*.{ts,js}",   // config 直下の .ts と .js ファイル
   ],
-  exclude: [
+  excludes: [
     "node_modules",
     "*.log",
     ".DS_Store",

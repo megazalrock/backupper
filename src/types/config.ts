@@ -14,7 +14,7 @@ export interface Config {
    *
    * 例: "src/", "src/**\/*.ts", "*.json", "config.ts"
    */
-  targetFiles: string[]
+  includes: string[]
   /** 除外するファイル/ディレクトリのパターン（glob形式） */
-  exclude: string[]
+  excludes: string[]
 }
