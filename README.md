@@ -21,8 +21,8 @@ bun run scripts/copy.ts
 ```typescript
 export const config = {
   base: string,        // コピー元のベースパス
-  targetFiles: string[], // コピー対象（ファイルまたはディレクトリ）
-  exclude: string[],   // 除外パターン
+  includes: string[], // コピー対象（ファイルまたはディレクトリ）
+  excludes: string[],   // 除外パターン
 }
 ```
 
@@ -31,19 +31,19 @@ export const config = {
 | 項目 | 型 | 説明 |
 |------|-----|------|
 | `base` | `string` | コピー元のベースパス（絶対パス） |
-| `targetFiles` | `string[]` | コピー対象の相対パス。末尾が `/` の場合はディレクトリ全体 |
-| `exclude` | `string[]` | 除外するファイル/ディレクトリのパターン |
+| `includes` | `string[]` | コピー対象の相対パス。末尾が `/` の場合はディレクトリ全体 |
+| `excludes` | `string[]` | 除外するファイル/ディレクトリのパターン |
 
 ### 設定例
 
 ```typescript
 export const config = {
   base: "/Users/otto/workspace/craftbank/arrangement-env/front",
-  targetFiles: [
+  includes: [
     ".claude/",           // ディレクトリ全体
     ".mgzl/",             // ディレクトリ全体
   ],
-  exclude: [
+  excludes: [
     "node_modules",
     "*.log",
     ".DS_Store",

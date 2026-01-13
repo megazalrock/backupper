@@ -128,7 +128,7 @@ function getFilesRecursively(dirPath: string, basePath: string): string[] {
 function resolveTargetFiles(cfg: Config): string[] {
   const files: string[] = []
 
-  for (const target of cfg.targetFiles) {
+  for (const target of cfg.includes) {
     if (target.endsWith("/")) {
       // ディレクトリ全体（既存動作）
       const fullPath = join(cfg.base, target)
@@ -274,7 +274,7 @@ export async function main(): Promise<void> {
 
   for (const relativePath of targetFiles) {
     // 除外チェック
-    if (shouldExclude(relativePath, config.exclude)) {
+    if (shouldExclude(relativePath, config.excludes)) {
       continue
     }
 
