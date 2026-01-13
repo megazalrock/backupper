@@ -60,6 +60,36 @@ function shouldExclude(relativePath: string, excludePatterns: string[]): boolean
 }
 
 // ============================================
+// glob パターン判定
+// ============================================
+
+/**
+ * glob 特殊文字を含むかどうかを判定する
+ * glob 特殊文字: *, ?, [, ], {, }
+ */
+function isGlobPattern(pattern: string): boolean {
+  return /[*?\[\]{}]/.test(pattern)
+}
+
+/**
+ * glob パターンにマッチするファイルを取得する
+ */
+function resolveGlobPattern(pattern: string, basePath: string): string[] {
+  const glob = new Bun.Glob(pattern)
+  const files: string[] = []
+
+  for (const file of glob.scanSync({
+    cwd: basePath,
+    dot: true, // . で始まるファイル/ディレクトリにもマッチ
+    onlyFiles: true,
+  })) {
+    files.push(file)
+  }
+
+  return files
+}
+
+// ============================================
 // ファイル一覧取得
 // ============================================
 
@@ -91,19 +121,26 @@ function getFilesRecursively(dirPath: string, basePath: string): string[] {
 
 /**
  * targetFiles から実際のファイルパス一覧を取得する
+ * - 末尾 `/` → ディレクトリ全体を再帰取得
+ * - glob 特殊文字を含む → glob パターンとして解決
+ * - それ以外 → 単一ファイルとして扱う
  */
 function resolveTargetFiles(cfg: Config): string[] {
   const files: string[] = []
 
   for (const target of cfg.targetFiles) {
-    const fullPath = join(cfg.base, target)
-
     if (target.endsWith("/")) {
-      // ディレクトリ全体
+      // ディレクトリ全体（既存動作）
+      const fullPath = join(cfg.base, target)
       const dirFiles = getFilesRecursively(fullPath, cfg.base)
       files.push(...dirFiles)
+    } else if (isGlobPattern(target)) {
+      // glob パターン（新機能）
+      const globFiles = resolveGlobPattern(target, cfg.base)
+      files.push(...globFiles)
     } else {
-      // 単一ファイル
+      // 単一ファイル（既存動作）
+      const fullPath = join(cfg.base, target)
       if (existsSync(fullPath)) {
         files.push(target)
       }
