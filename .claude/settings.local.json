@@ -10,7 +10,8 @@
       "Read(/Users/otto/workspace/craftbank/arrangement-env/front/.mgzl/**/*)",
       "Bash(bun run:*)",
       "mcp__context7__resolve-library-id",
-      "mcp__context7__query-docs"
+      "mcp__context7__query-docs",
+      "Bash(git mv:*)"
     ]
   }
 }
