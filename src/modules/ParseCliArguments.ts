@@ -17,7 +17,7 @@ export interface CliOptions {
  */
 export function showHelp(): void {
   console.log(`
-使用方法: bun run scripts/copyScript.ts [オプション]
+使用方法: bun run scripts/backup.ts [オプション]
 
 オプション:
   --config, -c <パス>  設定ファイルのパスを指定（デフォルト: ${DEFAULT_CONFIG_PATH}）

@@ -11,7 +11,7 @@ bun install
 ## 使用方法
 
 ```bash
-bun run scripts/copy.ts
+bun run scripts/backup.ts
 ```
 
 ## 設定ファイル仕様（config.ts）

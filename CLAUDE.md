@@ -9,7 +9,7 @@
 - `src/modules/ConfigLoader.ts` configファイルの読み込みなどをするモジュール
 - `src/modules/ParseCliArguments.ts` コマンドライン引数のパースを行うモジュール
 - `src/types/config.ts` コピー設定の型定義
-- `scripts/copyScript.ts` コピーを実行する `.ts` のスクリプト
+- `scripts/backup.ts` バックアップを実行する `.ts` のスクリプト
 - `config.example.ts` コピー設定のテンプレート（`config.ts`にコピーして使用）
 
 ## 技術
