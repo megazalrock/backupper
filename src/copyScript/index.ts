@@ -1,154 +1,12 @@
-import { existsSync, mkdirSync, readdirSync } from "node:fs"
-import { basename, dirname, join, relative } from "node:path"
+import { existsSync, mkdirSync } from "node:fs"
+import { dirname, join } from "node:path"
 import type { Config } from "../types/config.ts"
+import type { CopyResult } from "../types/result.ts"
 import { loadConfig, validateConfig } from "../modules/ConfigLoader.ts"
 import { parseArgs, showHelp, type CliOptions } from "../modules/ParseCliArguments.ts"
-
-// ============================================
-// 型定義
-// ============================================
-
-interface CopyResult {
-  success: boolean
-  source: string
-  destination: string
-  error?: string
-}
-
-// ============================================
-// パス変換関数
-// ============================================
-
-/**
- * ドットで始まるファイル・ディレクトリ名を dot__ に変換する
- * 例: .claude/settings.json → dot__claude/settings.json
- */
-function convertDotPath(relativePath: string): string {
-  const parts = relativePath.split("/")
-  const convertedParts = parts.map((part) => {
-    if (part.startsWith(".") && part.length > 1) {
-      return `dot__${part.slice(1)}`
-    }
-    return part
-  })
-  return convertedParts.join("/")
-}
-
-// ============================================
-// 除外判定関数
-// ============================================
-
-/**
- * 除外パターンにマッチするかどうかを判定する
- */
-function shouldExclude(relativePath: string, excludePatterns: string[]): boolean {
-  for (const pattern of excludePatterns) {
-    const glob = new Bun.Glob(pattern)
-    // パス全体とファイル名の両方でチェック
-    if (glob.match(relativePath) || glob.match(basename(relativePath))) {
-      return true
-    }
-    // ディレクトリ名を含むパスのチェック
-    const parts = relativePath.split("/")
-    for (const part of parts) {
-      if (glob.match(part)) {
-        return true
-      }
-    }
-  }
-  return false
-}
-
-// ============================================
-// glob パターン判定
-// ============================================
-
-/**
- * glob 特殊文字を含むかどうかを判定する
- * glob 特殊文字: *, ?, [, ], {, }
- */
-function isGlobPattern(pattern: string): boolean {
-  return /[*?\[\]{}]/.test(pattern)
-}
-
-/**
- * glob パターンにマッチするファイルを取得する
- */
-function resolveGlobPattern(pattern: string, basePath: string): string[] {
-  const glob = new Bun.Glob(pattern)
-  const files: string[] = []
-
-  for (const file of glob.scanSync({
-    cwd: basePath,
-    dot: true, // . で始まるファイル/ディレクトリにもマッチ
-    onlyFiles: true,
-  })) {
-    files.push(file)
-  }
-
-  return files
-}
-
-// ============================================
-// ファイル一覧取得
-// ============================================
-
-/**
- * ディレクトリ内のすべてのファイルを再帰的に取得する
- */
-function getFilesRecursively(dirPath: string, basePath: string): string[] {
-  const files: string[] = []
-
-  if (!existsSync(dirPath)) {
-    return files
-  }
-
-  const entries = readdirSync(dirPath, { withFileTypes: true })
-
-  for (const entry of entries) {
-    const fullPath = join(dirPath, entry.name)
-    const relativePath = relative(basePath, fullPath)
-
-    if (entry.isDirectory()) {
-      files.push(...getFilesRecursively(fullPath, basePath))
-    } else {
-      files.push(relativePath)
-    }
-  }
-
-  return files
-}
-
-/**
- * targetFiles から実際のファイルパス一覧を取得する
- * - 末尾 `/` → ディレクトリ全体を再帰取得
- * - glob 特殊文字を含む → glob パターンとして解決
- * - それ以外 → 単一ファイルとして扱う
- */
-function resolveTargetFiles(cfg: Config): string[] {
-  const files: string[] = []
-
-  for (const target of cfg.includes) {
-    if (target.endsWith("/")) {
-      // ディレクトリ全体（既存動作）
-      const fullPath = join(cfg.base, target)
-      const dirFiles = getFilesRecursively(fullPath, cfg.base)
-      files.push(...dirFiles)
-    } else if (isGlobPattern(target)) {
-      // glob パターン（新機能）
-      const globFiles = resolveGlobPattern(target, cfg.base)
-      files.push(...globFiles)
-    } else {
-      // 単一ファイル（既存動作）
-      const fullPath = join(cfg.base, target)
-      if (existsSync(fullPath)) {
-        files.push(target)
-      }
-    }
-  }
-
-  return files
-}
+import { convertDotPath } from "../modules/PathConverter.ts"
+import { resolveTargetFiles, shouldExclude } from "../modules/FileResolver.ts"
+import { logResult, logSummary } from "../modules/Logger.ts"
 
 // ============================================
 // コピー実行関数
@@ -185,34 +43,6 @@ async function copyFile(
       error: error instanceof Error ? error.message : String(error),
     }
   }
-}
-
-// ============================================
-// ログ出力
-// ============================================
-
-/**
- * コピー結果をログ出力する
- */
-function logResult(result: CopyResult): void {
-  if (result.success) {
-    console.log(`✓ ${result.source} → ${result.destination}`)
-  } else {
-    console.error(`✗ ${result.source} - ${result.error}`)
-  }
-}
-
-/**
- * サマリーを出力する
- */
-function logSummary(results: CopyResult[]): void {
-  const successCount = results.filter((r) => r.success).length
-  const failureCount = results.filter((r) => !r.success).length
-
-  console.log("")
-  console.log("=".repeat(50))
-  console.log(`コピー完了: 成功 ${successCount} 件, 失敗 ${failureCount} 件`)
-  console.log("=".repeat(50))
 }
 
 // ============================================
@@ -290,5 +120,5 @@ export async function main(): Promise<void> {
   }
 
   // 6. サマリー出力
-  logSummary(results)
+  logSummary(results, "コピー")
 }
