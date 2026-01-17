@@ -14,7 +14,8 @@
       "Bash(git mv:*)",
       "Bash(find:*)",
       "Bash(bun test:*)",
-      "Bash(bun -e:*)"
+      "Bash(bun -e:*)",
+      "Bash(bunx tsc:*)"
     ]
   }
 }
