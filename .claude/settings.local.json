@@ -11,7 +11,9 @@
       "Bash(bun run:*)",
       "mcp__context7__resolve-library-id",
       "mcp__context7__query-docs",
-      "Bash(git mv:*)"
+      "Bash(git mv:*)",
+      "Bash(find:*)",
+      "Bash(bun test:*)"
     ]
   }
 }

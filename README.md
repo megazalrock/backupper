@@ -61,3 +61,6 @@ export const config = {
   - ディレクトリ全体: `".claude/"` （末尾に `/`）
 - **除外パターン**: glob形式で指定可能
 
+### テスト
+
+[テスト方針 @docs/testing-guidelines.md](docs/testing-guidelines.md) を参照
