@@ -41,10 +41,7 @@ jobs:
             actions: read
 
           # 日本語で応答するように指示
-          system_prompt: '必ず日本語で応答してください。'
-
-          # Optional: Add claude_args to customize behavior and configuration
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://code.claude.com/docs/en/cli-reference for available options
-          # claude_args: '--allowed-tools Bash(gh pr:*)'
+          claude_args: '--system-prompt "必ず日本語で応答してください。"'
 
