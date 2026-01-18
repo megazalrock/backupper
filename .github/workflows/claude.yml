@@ -40,8 +40,8 @@ jobs:
           additional_permissions: |
             actions: read
 
-          # Optional: Give a custom prompt to Claude. If this is not specified, Claude will perform the instructions specified in the comment that tagged it.
-          # prompt: '日本語で記述する。Pull request descriptionを更新して、変更内容の概要を含めてください。'
+          # 日本語で応答するように指示
+          system_prompt: '必ず日本語で応答してください。'
 
           # Optional: Add claude_args to customize behavior and configuration
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
