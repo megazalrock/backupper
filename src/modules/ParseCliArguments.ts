@@ -5,6 +5,19 @@ import { DEFAULT_CONFIG_PATH } from "./ConfigLoader.ts"
 // ============================================
 
 /**
+ * サブコマンドの種類
+ */
+export type SubCommand = "backup" | "restore"
+
+/**
+ * メインCLI引数の解析結果
+ */
+export type MainCliResult =
+  | { type: "help" }
+  | { type: "subcommand"; command: SubCommand; args: string[] }
+  | { type: "error"; message: string }
+
+/**
  * backup用CLI引数オプション
  */
 export interface BackupCliOptions {
@@ -33,7 +46,7 @@ export type CliOptions = BackupCliOptions
  */
 export function showBackupHelp(): void {
   console.log(`
-使用方法: bun run scripts/backup.ts [オプション]
+使用方法: bun run cli backup [オプション]
 
 オプション:
   --config, -c <パス>  設定ファイルのパスを指定（デフォルト: ${DEFAULT_CONFIG_PATH}）
@@ -80,7 +93,7 @@ export const parseArgs = parseBackupArgs
  */
 export function showRestoreHelp(): void {
   console.log(`
-使用方法: bun run scripts/restore.ts [オプション]
+使用方法: bun run cli restore [オプション]
 
 オプション:
   --config, -c <パス>  設定ファイルのパスを指定（デフォルト: ${DEFAULT_CONFIG_PATH}）
@@ -124,4 +137,59 @@ export function parseRestoreArgs(args: string[]): RestoreCliOptions | null {
   }
 
   return options
+}
+
+// ============================================
+// メインCLI（サブコマンドルーティング）
+// ============================================
+
+/**
+ * メインヘルプメッセージを表示する
+ */
+export function showMainHelp(): void {
+  console.log(`
+Backupper - ファイルバックアップ・リストアツール
+
+使用方法: bun run cli <コマンド> [オプション]
+
+コマンド:
+  backup    ファイルをバックアップ (files/ へコピー)
+  restore   ファイルをリストア (files/ から元の場所へ復元)
+
+オプション:
+  --help, -h      このヘルプを表示
+
+各コマンドの詳細:
+  bun run cli backup --help
+  bun run cli restore --help
+`)
+}
+
+/**
+ * メインCLI引数を解析する（サブコマンドルーティング用）
+ */
+export function parseMainArgs(args: string[]): MainCliResult {
+  // 引数なし
+  if (args.length === 0) {
+    return { type: "error", message: "コマンドが指定されていません" }
+  }
+
+  const firstArg = args[0]
+
+  // ヘルプオプション
+  if (firstArg === "--help" || firstArg === "-h") {
+    return { type: "help" }
+  }
+
+  // サブコマンド判定
+  if (firstArg === "backup" || firstArg === "restore") {
+    return {
+      type: "subcommand",
+      command: firstArg,
+      args: args.slice(1),
+    }
+  }
+
+  // 不明なコマンド
+  return { type: "error", message: `不明なコマンド: ${firstArg}` }
 }

@@ -15,7 +15,8 @@
       "Bash(find:*)",
       "Bash(bun test:*)",
       "Bash(bun -e:*)",
-      "Bash(bunx tsc:*)"
+      "Bash(bunx tsc:*)",
+      "mcp__ide__getDiagnostics"
     ]
   }
 }

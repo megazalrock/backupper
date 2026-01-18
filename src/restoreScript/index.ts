@@ -125,9 +125,9 @@ async function restoreFile(
 // メイン処理
 // ============================================
 
-export async function main(): Promise<void> {
+export async function main(cliArgs?: string[]): Promise<void> {
   // 1. コマンドライン引数を解析
-  const args = process.argv.slice(2)
+  const args = cliArgs ?? process.argv.slice(2)
   let options: RestoreCliOptions
 
   try {

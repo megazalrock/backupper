@@ -7,7 +7,11 @@ import {
   spyOn,
   type Mock,
 } from "bun:test"
-import { parseBackupArgs, parseRestoreArgs } from "../ParseCliArguments"
+import {
+  parseBackupArgs,
+  parseRestoreArgs,
+  parseMainArgs,
+} from "../ParseCliArguments"
 
 describe("ParseCliArguments", () => {
   let consoleSpy: Mock<typeof console.log>
@@ -185,6 +189,87 @@ describe("ParseCliArguments", () => {
       expect(() => parseRestoreArgs(["--config", "--dry-run"])).toThrow(
         "--config オプションには設定ファイルのパスが必要です"
       )
+    })
+  })
+
+  describe("parseMainArgs", () => {
+    test("引数なしでエラーを返す", () => {
+      const result = parseMainArgs([])
+
+      expect(result).toEqual({
+        type: "error",
+        message: "コマンドが指定されていません",
+      })
+    })
+
+    test("--help オプションで help タイプを返す", () => {
+      const result = parseMainArgs(["--help"])
+
+      expect(result).toEqual({ type: "help" })
+    })
+
+    test("-h オプションで help タイプを返す", () => {
+      const result = parseMainArgs(["-h"])
+
+      expect(result).toEqual({ type: "help" })
+    })
+
+    test("backup コマンドで subcommand タイプを返す", () => {
+      const result = parseMainArgs(["backup"])
+
+      expect(result).toEqual({
+        type: "subcommand",
+        command: "backup",
+        args: [],
+      })
+    })
+
+    test("backup コマンドに続くオプションを args に含める", () => {
+      const result = parseMainArgs(["backup", "--config", "custom.ts"])
+
+      expect(result).toEqual({
+        type: "subcommand",
+        command: "backup",
+        args: ["--config", "custom.ts"],
+      })
+    })
+
+    test("restore コマンドで subcommand タイプを返す", () => {
+      const result = parseMainArgs(["restore"])
+
+      expect(result).toEqual({
+        type: "subcommand",
+        command: "restore",
+        args: [],
+      })
+    })
+
+    test("restore コマンドに続くオプションを args に含める", () => {
+      const result = parseMainArgs(["restore", "--dry-run", "--force"])
+
+      expect(result).toEqual({
+        type: "subcommand",
+        command: "restore",
+        args: ["--dry-run", "--force"],
+      })
+    })
+
+    test("不明なコマンドでエラーを返す", () => {
+      const result = parseMainArgs(["unknown"])
+
+      expect(result).toEqual({
+        type: "error",
+        message: "不明なコマンド: unknown",
+      })
+    })
+
+    test("不明なコマンド（数字）でエラーを返す", () => {
+      const result = parseMainArgs(["123"])
+
+      expect(result).toEqual({
+        type: "error",
+        message: "不明なコマンド: 123",
+      })
     })
   })
 })

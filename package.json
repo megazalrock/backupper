@@ -1,9 +1,12 @@
 {
-  "name": "docs",
+  "name": "backupper",
   "module": "index.ts",
   "type": "module",
   "private": true,
   "scripts": {
+    "cli": "bun run scripts/cli.ts",
+    "backup": "bun run scripts/cli.ts backup",
+    "restore": "bun run scripts/cli.ts restore",
     "test": "bun test",
     "test:coverage": "bun test --coverage",
     "test:watch": "bun test --watch"
