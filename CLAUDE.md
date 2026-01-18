@@ -5,7 +5,8 @@
 ## 構成
 
 - `files/` コピーされたファイルを保存するディレクトリ（実行時に作成）
-- `src/copyScript/index.ts` コピーを実行する `.ts` のスクリプト
+- `src/commands/backup/index.ts` バックアップを実行する `.ts` のスクリプト
+- `src/commands/restore/index.ts` リストアを実行する `.ts` のスクリプト
 - `src/modules/ConfigLoader.ts` configファイルの読み込みなどをするモジュール
 - `src/modules/ParseCliArguments.ts` コマンドライン引数のパースを行うモジュール
 - `src/types/config.ts` コピー設定の型定義
