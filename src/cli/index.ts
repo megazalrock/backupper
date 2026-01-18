@@ -1,5 +1,5 @@
-import { main as backupMain } from "../copyScript/index.ts"
-import { main as restoreMain } from "../restoreScript/index.ts"
+import { main as backupMain } from "../commands/copyScript/index.ts"
+import { main as restoreMain } from "../commands/restoreScript/index.ts"
 import { parseMainArgs, showMainHelp } from "../modules/ParseCliArguments.ts"
 
 /**
