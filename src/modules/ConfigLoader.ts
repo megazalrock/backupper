@@ -36,11 +36,11 @@ export async function loadConfig(configPath: string): Promise<Config> {
  * 設定のバリデーションを行う（backup用）
  */
 export function validateConfig(cfg: Config): void {
-  if (!existsSync(cfg.base)) {
-    throw new Error(`ベースパスが存在しません: ${cfg.base}`)
+  if (!existsSync(cfg.source)) {
+    throw new Error(`ベースパスが存在しません: ${cfg.source}`)
   }
 
-  if (!cfg.outputDir || cfg.outputDir.trim() === "") {
+  if (!cfg.target || cfg.target.trim() === "") {
     throw new Error("outputDir が指定されていません")
   }
 }
@@ -51,15 +51,15 @@ export function validateConfig(cfg: Config): void {
  * - outputDir（files/）の存在確認
  */
 export function validateConfigForRestore(cfg: Config): void {
-  if (!existsSync(cfg.base)) {
-    throw new Error(`ベースパスが存在しません: ${cfg.base}`)
+  if (!existsSync(cfg.source)) {
+    throw new Error(`ベースパスが存在しません: ${cfg.source}`)
   }
 
-  if (!cfg.outputDir || cfg.outputDir.trim() === "") {
+  if (!cfg.target || cfg.target.trim() === "") {
     throw new Error("outputDir が指定されていません")
   }
 
-  if (!existsSync(cfg.outputDir)) {
-    throw new Error(`出力ディレクトリが存在しません: ${cfg.outputDir}`)
+  if (!existsSync(cfg.target)) {
+    throw new Error(`出力ディレクトリが存在しません: ${cfg.target}`)
   }
 }

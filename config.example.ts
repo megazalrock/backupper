@@ -4,8 +4,8 @@ import type { Config } from 'src/types/config.ts'
  * コピー設定
  */
 export const config: Config = {
-  base: "/Users/otto/workspace/craftbank/arrangement-env/front",
-  outputDir: "files",
+  source: "/Users/otto/workspace/craftbank/arrangement-env/front",
+  target: "files",
   includes: [
     // ディレクトリ全体（末尾 / ）
     ".claude/",

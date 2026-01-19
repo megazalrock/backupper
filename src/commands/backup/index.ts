@@ -110,8 +110,8 @@ export async function main(cliArgs?: string[]): Promise<void> {
 
     // パス変換
     const convertedPath = convertDotPath(relativePath)
-    const sourcePath = join(config.base, relativePath)
-    const destPath = join(config.outputDir, convertedPath)
+    const sourcePath = join(config.source, relativePath)
+    const destPath = join(config.target, convertedPath)
 
     // コピー実行
     const result = await copyFile(sourcePath, destPath)

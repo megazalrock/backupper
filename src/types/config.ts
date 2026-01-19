@@ -2,10 +2,10 @@
  * コピー設定の型定義
  */
 export interface Config {
-  /** コピー元のベースパス（絶対パス） */
-  base: string
+  /** コピー元のディレクトリ（絶対パス） */
+  source: string
   /** コピー先の出力ディレクトリ（相対パスまたは絶対パス） */
-  outputDir: string
+  target: string
   /**
    * コピー対象の相対パス
    * - 末尾が `/` の場合はディレクトリ全体

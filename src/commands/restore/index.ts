@@ -38,7 +38,7 @@ function collectRestoreFileInfo(
     // dot__形式を.形式に変換
     const originalPath = revertDotPath(backupPath)
     // base側のフルパス
-    const destFullPath = join(config.base, originalPath)
+    const destFullPath = join(config.source, originalPath)
     // 上書きかどうか
     const isOverwrite = existsSync(destFullPath)
 
@@ -208,8 +208,8 @@ export async function main(cliArgs?: string[]): Promise<void> {
   const results: CopyResult[] = []
 
   for (const fileInfo of fileInfos) {
-    const sourcePath = join(config.outputDir, fileInfo.backupPath)
-    const destPath = join(config.base, fileInfo.originalPath)
+    const sourcePath = join(config.target, fileInfo.backupPath)
+    const destPath = join(config.source, fileInfo.originalPath)
 
     const { result, backupPath } = await restoreFile(
       sourcePath,

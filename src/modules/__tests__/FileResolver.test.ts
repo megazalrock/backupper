@@ -159,8 +159,8 @@ describe("FileResolver", () => {
         })
 
         const config: Config = {
-          base: tempDir,
-          outputDir: `${tempDir}/output`,
+          source: tempDir,
+          target: `${tempDir}/output`,
           includes: ["src/"],
           excludes: [],
         }
@@ -177,8 +177,8 @@ describe("FileResolver", () => {
         })
 
         const config: Config = {
-          base: tempDir,
-          outputDir: `${tempDir}/output`,
+          source: tempDir,
+          target: `${tempDir}/output`,
           includes: ["**/*.ts"],
           excludes: [],
         }
@@ -194,8 +194,8 @@ describe("FileResolver", () => {
         })
 
         const config: Config = {
-          base: tempDir,
-          outputDir: `${tempDir}/output`,
+          source: tempDir,
+          target: `${tempDir}/output`,
           includes: ["config.json"],
           excludes: [],
         }
@@ -210,8 +210,8 @@ describe("FileResolver", () => {
         })
 
         const config: Config = {
-          base: tempDir,
-          outputDir: `${tempDir}/output`,
+          source: tempDir,
+          target: `${tempDir}/output`,
           includes: ["exists.txt", "nonexistent.txt"],
           excludes: [],
         }
@@ -230,8 +230,8 @@ describe("FileResolver", () => {
         })
 
         const config: Config = {
-          base: `${tempDir}/base`,
-          outputDir: `${tempDir}/output`,
+          source: `${tempDir}/base`,
+          target: `${tempDir}/output`,
           includes: ["src/"],
           excludes: [],
         }
@@ -248,8 +248,8 @@ describe("FileResolver", () => {
         })
 
         const config: Config = {
-          base: `${tempDir}/base`,
-          outputDir: `${tempDir}/output`,
+          source: `${tempDir}/base`,
+          target: `${tempDir}/output`,
           includes: ["src/"],
           excludes: ["*.test.ts"],
         }
@@ -266,8 +266,8 @@ describe("FileResolver", () => {
         })
 
         const config: Config = {
-          base: `${tempDir}/base`,
-          outputDir: `${tempDir}/output`,
+          source: `${tempDir}/base`,
+          target: `${tempDir}/output`,
           includes: [".gitignore", ".env"],
           excludes: [],
         }

@@ -60,8 +60,8 @@ export const config = {
 
       const result = await loadConfig(join(tempDir, "valid-config.ts"))
       expect(result).toEqual({
-        base: "/test/base",
-        outputDir: "./files",
+        source: "/test/base",
+        target: "./files",
         includes: ["src/"],
         excludes: ["node_modules/"],
       })
@@ -102,7 +102,7 @@ export const config = {
       // 相対パスでも読み込めることを確認
       const absolutePath = join(tempDir, "relative-config.ts")
       const result = await loadConfig(absolutePath)
-      expect(result.base).toBe("/resolved/path")
+      expect(result.source).toBe("/resolved/path")
     })
   })
 
@@ -122,8 +122,8 @@ export const config = {
 
     test("有効な設定の場合、エラーをスローしない", () => {
       const validConfig: Config = {
-        base: tempDir, // 存在するディレクトリ
-        outputDir: "./files",
+        source: tempDir, // 存在するディレクトリ
+        target: "./files",
         includes: ["src/"],
         excludes: [],
       }
@@ -133,8 +133,8 @@ export const config = {
 
     test("base が存在しない場合、エラーをスローする", () => {
       const invalidConfig: Config = {
-        base: "/nonexistent/path/to/base",
-        outputDir: "./files",
+        source: "/nonexistent/path/to/base",
+        target: "./files",
         includes: ["src/"],
         excludes: [],
       }
@@ -146,8 +146,8 @@ export const config = {
 
     test("outputDir が空文字の場合、エラーをスローする", () => {
       const invalidConfig: Config = {
-        base: tempDir,
-        outputDir: "",
+        source: tempDir,
+        target: "",
         includes: ["src/"],
         excludes: [],
       }
@@ -159,8 +159,8 @@ export const config = {
 
     test("outputDir が空白のみの場合、エラーをスローする", () => {
       const invalidConfig: Config = {
-        base: tempDir,
-        outputDir: "   ",
+        source: tempDir,
+        target: "   ",
         includes: ["src/"],
         excludes: [],
       }
@@ -193,8 +193,8 @@ export const config = {
       })
 
       const validConfig: Config = {
-        base: join(tempDir, "base"),
-        outputDir: join(tempDir, "files"),
+        source: join(tempDir, "base"),
+        target: join(tempDir, "files"),
         includes: ["src/"],
         excludes: [],
       }
@@ -208,8 +208,8 @@ export const config = {
       })
 
       const invalidConfig: Config = {
-        base: "/nonexistent/base/path",
-        outputDir: join(tempDir, "files"),
+        source: "/nonexistent/base/path",
+        target: join(tempDir, "files"),
         includes: ["src/"],
         excludes: [],
       }
@@ -225,8 +225,8 @@ export const config = {
       })
 
       const invalidConfig: Config = {
-        base: join(tempDir, "base"),
-        outputDir: "",
+        source: join(tempDir, "base"),
+        target: "",
         includes: ["src/"],
         excludes: [],
       }
@@ -242,8 +242,8 @@ export const config = {
       })
 
       const invalidConfig: Config = {
-        base: join(tempDir, "base"),
-        outputDir: join(tempDir, "nonexistent-output"),
+        source: join(tempDir, "base"),
+        target: join(tempDir, "nonexistent-output"),
         includes: ["src/"],
         excludes: [],
       }
@@ -259,8 +259,8 @@ export const config = {
       })
 
       const invalidConfig: Config = {
-        base: join(tempDir, "base"),
-        outputDir: "   ",
+        source: join(tempDir, "base"),
+        target: "   ",
         includes: ["src/"],
         excludes: [],
       }

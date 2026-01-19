@@ -100,16 +100,16 @@ export function resolveTargetFiles(cfg: Config): string[] {
   for (const target of cfg.includes) {
     if (target.endsWith("/")) {
       // ディレクトリ全体
-      const fullPath = join(cfg.base, target)
-      const dirFiles = getFilesRecursively(fullPath, cfg.base)
+      const fullPath = join(cfg.source, target)
+      const dirFiles = getFilesRecursively(fullPath, cfg.source)
       files.push(...dirFiles)
     } else if (isGlobPattern(target)) {
       // glob パターン
-      const globFiles = resolveGlobPattern(target, cfg.base)
+      const globFiles = resolveGlobPattern(target, cfg.source)
       files.push(...globFiles)
     } else {
       // 単一ファイル
-      const fullPath = join(cfg.base, target)
+      const fullPath = join(cfg.source, target)
       if (existsSync(fullPath)) {
         files.push(target)
       }
@@ -125,7 +125,7 @@ export function resolveTargetFiles(cfg: Config): string[] {
  */
 export function resolveRestoreFiles(cfg: Config): string[] {
   // outputDir内の全ファイルを取得
-  const allFiles = getFilesRecursively(cfg.outputDir, cfg.outputDir)
+  const allFiles = getFilesRecursively(cfg.target, cfg.target)
   const matchedFiles: string[] = []
 
   for (const file of allFiles) {
