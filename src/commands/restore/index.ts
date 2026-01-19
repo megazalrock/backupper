@@ -1,22 +1,22 @@
 import { copyFileSync, existsSync, mkdirSync } from "node:fs"
 import { dirname, join } from "node:path"
-import type { Config } from "../types/config.ts"
-import type { CopyResult, RestoreFileInfo } from "../types/result.ts"
-import { loadConfig, validateConfigForRestore } from "../modules/ConfigLoader.ts"
+import type { Config } from "../../types/config.ts"
+import type { CopyResult, RestoreFileInfo } from "../../types/result.ts"
+import { loadConfig, validateConfigForRestore } from "../../modules/ConfigLoader.ts"
 import {
   parseRestoreArgs,
   showRestoreHelp,
   type RestoreCliOptions,
-} from "../modules/ParseCliArguments.ts"
-import { revertDotPath } from "../modules/PathConverter.ts"
-import { resolveRestoreFiles } from "../modules/FileResolver.ts"
+} from "../../modules/ParseCliArguments.ts"
+import { revertDotPath } from "../../modules/PathConverter.ts"
+import { resolveRestoreFiles } from "../../modules/FileResolver.ts"
 import {
   logResult,
   logSummary,
   logRestoreFileList,
   logDryRunFileList,
-} from "../modules/Logger.ts"
-import { confirmContinue } from "../modules/UserPrompt.ts"
+} from "../../modules/Logger.ts"
+import { confirmContinue } from "../../modules/UserPrompt.ts"
 
 // ============================================
 // リストア対象ファイル情報収集

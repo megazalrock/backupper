@@ -1,12 +1,12 @@
 import { existsSync, mkdirSync } from "node:fs"
 import { dirname, join } from "node:path"
-import type { Config } from "../types/config.ts"
-import type { CopyResult } from "../types/result.ts"
-import { loadConfig, validateConfig } from "../modules/ConfigLoader.ts"
-import { parseArgs, showHelp, type CliOptions } from "../modules/ParseCliArguments.ts"
-import { convertDotPath } from "../modules/PathConverter.ts"
-import { resolveTargetFiles, shouldExclude } from "../modules/FileResolver.ts"
-import { logResult, logSummary } from "../modules/Logger.ts"
+import type { Config } from "../../types/config.ts"
+import type { CopyResult } from "../../types/result.ts"
+import { loadConfig, validateConfig } from "../../modules/ConfigLoader.ts"
+import { parseArgs, showHelp, type CliOptions } from "../../modules/ParseCliArguments.ts"
+import { convertDotPath } from "../../modules/PathConverter.ts"
+import { resolveTargetFiles, shouldExclude } from "../../modules/FileResolver.ts"
+import { logResult, logSummary } from "../../modules/Logger.ts"
 
 // ============================================
 // コピー実行関数
