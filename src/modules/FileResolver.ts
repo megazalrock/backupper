@@ -6,7 +6,7 @@
 import { existsSync, readdirSync } from "node:fs"
 import { basename, join, relative } from "node:path"
 import type { Config } from "../types/config.ts"
-import { revertDotPath } from "./PathConverter.ts"
+import { convertDotPath, revertDotPath } from "./PathConverter.ts"
 
 /**
  * glob 特殊文字を含むかどうかを判定する
@@ -165,4 +165,62 @@ export function resolveRestoreFiles(cfg: Config): string[] {
   }
 
   return matchedFiles
+}
+
+/**
+ * ターゲットディレクトリ内の削除対象ファイル（孤児ファイル）を特定する
+ * ソースに対応がないファイルを検出する
+ */
+export function findOrphanedFiles(
+  sourceFiles: string[],
+  config: Config
+): string[] {
+  // ソースファイルを convertDotPath() で変換してセットを作成
+  const sourceSet = new Set(sourceFiles.map((file) => convertDotPath(file)))
+
+  // ターゲットディレクトリ内の全ファイルを取得
+  const targetFiles = getFilesRecursively(config.target, config.target)
+
+  const orphanedFiles: string[] = []
+
+  for (const targetFile of targetFiles) {
+    // ターゲットファイルがソースセットに含まれていない場合
+    if (!sourceSet.has(targetFile)) {
+      // dot__形式のパスを元のパス形式（.形式）に変換してパターンマッチング
+      const originalPath = revertDotPath(targetFile)
+
+      // includesパターンの範囲内かどうか確認
+      let isInScope = false
+      for (const pattern of config.includes) {
+        if (pattern.endsWith("/")) {
+          // ディレクトリパターン: パスがこのディレクトリで始まるか確認
+          const dirPattern = pattern.slice(0, -1) // 末尾の / を除去
+          if (originalPath.startsWith(dirPattern + "/") || originalPath.startsWith(dirPattern)) {
+            isInScope = true
+            break
+          }
+        } else if (isGlobPattern(pattern)) {
+          // globパターン
+          const glob = new Bun.Glob(pattern)
+          if (glob.match(originalPath)) {
+            isInScope = true
+            break
+          }
+        } else {
+          // 単一ファイル: 完全一致
+          if (originalPath === pattern) {
+            isInScope = true
+            break
+          }
+        }
+      }
+
+      // includesパターンの範囲内かつ excludesパターンに該当しない場合
+      if (isInScope && !shouldExclude(originalPath, config.excludes)) {
+        orphanedFiles.push(targetFile)
+      }
+    }
+  }
+
+  return orphanedFiles
 }

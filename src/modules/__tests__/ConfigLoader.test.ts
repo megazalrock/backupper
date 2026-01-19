@@ -48,8 +48,8 @@ describe("ConfigLoader", () => {
     test("存在するファイルから config を読み込む", async () => {
       const configContent = `
 export const config = {
-  base: "/test/base",
-  outputDir: "./files",
+  source: "/test/base",
+  target: "./files",
   includes: ["src/"],
   excludes: ["node_modules/"],
 }
@@ -70,8 +70,8 @@ export const config = {
     test("config がエクスポートされていない場合エラーをスローする", async () => {
       const configContent = `
 export const settings = {
-  base: "/test/base",
-  outputDir: "./files",
+  source: "/test/base",
+  target: "./files",
   includes: ["src/"],
   excludes: [],
 }
@@ -89,8 +89,8 @@ export const settings = {
     test("相対パスを絶対パスに解決して読み込む", async () => {
       const configContent = `
 export const config = {
-  base: "/resolved/path",
-  outputDir: "./out",
+  source: "/resolved/path",
+  target: "./out",
   includes: [],
   excludes: [],
 }

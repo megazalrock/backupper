@@ -22,6 +22,7 @@ export type MainCliResult =
  */
 export interface BackupCliOptions {
   configPath: string
+  sync: boolean
 }
 
 /**
@@ -50,6 +51,7 @@ export function showBackupHelp(): void {
 
 オプション:
   --config, -c <パス>  設定ファイルのパスを指定（デフォルト: ${DEFAULT_CONFIG_PATH}）
+  --sync               ソースで削除されたファイルをターゲットからも削除
   --help, -h           このヘルプを表示
 `)
 }
@@ -60,6 +62,7 @@ export function showBackupHelp(): void {
 export function parseBackupArgs(args: string[]): BackupCliOptions | null {
   const options: BackupCliOptions = {
     configPath: DEFAULT_CONFIG_PATH,
+    sync: false,
   }
 
   for (let i = 0; i < args.length; i++) {
@@ -74,6 +77,8 @@ export function parseBackupArgs(args: string[]): BackupCliOptions | null {
       }
       options.configPath = nextArg
       i++ // 次の引数をスキップ
+    } else if (arg === "--sync") {
+      options.sync = true
     }
   }
 

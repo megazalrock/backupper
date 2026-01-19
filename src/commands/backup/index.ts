@@ -1,16 +1,57 @@
-import { existsSync, mkdirSync } from "node:fs"
+import { existsSync, mkdirSync, unlinkSync, rmdirSync, readdirSync } from "node:fs"
 import { dirname, join } from "node:path"
 import type { Config } from "../../types/config.ts"
-import type { CopyResult } from "../../types/result.ts"
+import type { CopyResult, DeleteResult } from "../../types/result.ts"
 import { loadConfig, validateConfig } from "../../modules/ConfigLoader.ts"
-import { parseArgs, showHelp, type CliOptions } from "../../modules/ParseCliArguments.ts"
+import { parseArgs, showHelp, type BackupCliOptions } from "../../modules/ParseCliArguments.ts"
 import { convertDotPath } from "../../modules/PathConverter.ts"
-import { resolveTargetFiles, shouldExclude } from "../../modules/FileResolver.ts"
-import { logResult, logSummary } from "../../modules/Logger.ts"
+import { findOrphanedFiles, resolveTargetFiles, shouldExclude } from "../../modules/FileResolver.ts"
+import { logDeleteResult, logResult, logSummary, logSyncSummary } from "../../modules/Logger.ts"
 
 // ============================================
-// コピー実行関数
+// コピー・削除実行関数
 // ============================================
+
+/**
+ * ファイルを削除する
+ */
+function deleteFile(filePath: string): DeleteResult {
+  try {
+    unlinkSync(filePath)
+    return {
+      success: true,
+      path: filePath,
+    }
+  } catch (error) {
+    return {
+      success: false,
+      path: filePath,
+      error: error instanceof Error ? error.message : String(error),
+    }
+  }
+}
+
+/**
+ * 空のディレクトリを再帰的に削除する
+ */
+function removeEmptyDirectories(dirPath: string, rootPath: string): void {
+  // ルートディレクトリ自体は削除しない
+  if (dirPath === rootPath) {
+    return
+  }
+
+  try {
+    const entries = readdirSync(dirPath)
+    if (entries.length === 0) {
+      rmdirSync(dirPath)
+      // 親ディレクトリも確認
+      const parentDir = dirname(dirPath)
+      removeEmptyDirectories(parentDir, rootPath)
+    }
+  } catch {
+    // ディレクトリが存在しない場合などは無視
+  }
+}
 
 /**
  * ファイルをコピーする
@@ -52,7 +93,7 @@ async function copyFile(
 export async function main(cliArgs?: string[]): Promise<void> {
   // 1. コマンドライン引数を解析
   const args = cliArgs ?? process.argv.slice(2)
-  let options: CliOptions
+  let options: BackupCliOptions
 
   try {
     const parsed = parseArgs(args)
@@ -71,6 +112,9 @@ export async function main(cliArgs?: string[]): Promise<void> {
 
   console.log("コピースクリプトを開始します...")
   console.log(`設定ファイル: ${options.configPath}`)
+  if (options.sync) {
+    console.log("同期モード: 有効（ソースに存在しないファイルを削除）")
+  }
   console.log("")
 
   // 2. 設定ファイルを読み込み
@@ -100,13 +144,17 @@ export async function main(cliArgs?: string[]): Promise<void> {
   console.log("")
 
   // 5. コピー実行
-  const results: CopyResult[] = []
+  const copyResults: CopyResult[] = []
+  // 除外されていないファイルのリストを保持（削除判定に使用）
+  const copiedFiles: string[] = []
 
   for (const relativePath of targetFiles) {
     // 除外チェック
     if (shouldExclude(relativePath, config.excludes)) {
       continue
     }
+
+    copiedFiles.push(relativePath)
 
     // パス変換
     const convertedPath = convertDotPath(relativePath)
@@ -115,10 +163,39 @@ export async function main(cliArgs?: string[]): Promise<void> {
 
     // コピー実行
     const result = await copyFile(sourcePath, destPath)
-    results.push(result)
+    copyResults.push(result)
     logResult(result)
   }
 
-  // 6. サマリー出力
-  logSummary(results, "コピー")
+  // 6. 同期モード: 孤児ファイルの削除
+  const deleteResults: DeleteResult[] = []
+
+  if (options.sync) {
+    const orphanedFiles = findOrphanedFiles(copiedFiles, config)
+
+    if (orphanedFiles.length > 0) {
+      console.log("")
+      console.log(`削除対象ファイル数: ${orphanedFiles.length}`)
+
+      for (const orphanedFile of orphanedFiles) {
+        const filePath = join(config.target, orphanedFile)
+        const result = deleteFile(filePath)
+        deleteResults.push(result)
+        logDeleteResult(result)
+
+        // 削除成功時、空になったディレクトリを削除
+        if (result.success) {
+          const parentDir = dirname(filePath)
+          removeEmptyDirectories(parentDir, config.target)
+        }
+      }
+    }
+  }
+
+  // 7. サマリー出力
+  if (options.sync) {
+    logSyncSummary(copyResults, deleteResults)
+  } else {
+    logSummary(copyResults, "コピー")
+  }
 }

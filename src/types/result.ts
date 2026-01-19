@@ -19,3 +19,12 @@ export interface RestoreFileInfo {
   /** 上書きかどうか */
   isOverwrite: boolean
 }
+
+/**
+ * 削除結果を表す型
+ */
+export interface DeleteResult {
+  success: boolean
+  path: string
+  error?: string
+}
