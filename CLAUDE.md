@@ -1,6 +1,7 @@
 # CLAUDE.md
 
 `/Users/otto/workspace/craftbank/arrangement-env/front` 内の指定したファイルを `./files/` にコピーしgitでの管理をするためのリポジトリです。
+ユーザーに対しては**必ず日本語で応答**します。
 
 ## 構成
 
