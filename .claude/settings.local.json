@@ -19,6 +19,7 @@
       "mcp__context7__resolve-library-id",
       "mcp__ide__getDiagnostics",
       "mcp__jetbrains",
+      "Skill(test-runner)",
       "Bash(git checkout:*)",
       "Bash(git stash:*)"
     ],
@@ -33,8 +34,8 @@
       "mcp__jetbrains__reformat_file"
     ]
   },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
-    "eslint",
     "serena"
   ]
 }

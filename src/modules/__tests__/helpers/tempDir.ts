@@ -2,22 +2,22 @@
  * テスト用一時ディレクトリ管理ヘルパー
  */
 
-import { mkdtempSync, rmSync, mkdirSync, writeFileSync } from "node:fs"
-import { tmpdir } from "node:os"
-import { join, dirname } from "node:path"
+import { mkdtempSync, rmSync, mkdirSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, dirname } from 'node:path';
 
 /**
  * 一時ディレクトリを作成する
  */
-export function createTempDir(prefix = "backupper-test-"): string {
-  return mkdtempSync(join(tmpdir(), prefix))
+export function createTempDir(prefix = 'backupper-test-'): string {
+  return mkdtempSync(join(tmpdir(), prefix));
 }
 
 /**
  * 一時ディレクトリを削除する
  */
 export function cleanupTempDir(dir: string): void {
-  rmSync(dir, { recursive: true, force: true })
+  rmSync(dir, { recursive: true, force: true });
 }
 
 /**
@@ -27,12 +27,12 @@ export function cleanupTempDir(dir: string): void {
  */
 export function createTestFiles(
   baseDir: string,
-  files: Record<string, string>
+  files: Record<string, string>,
 ): void {
   for (const [filePath, content] of Object.entries(files)) {
-    const fullPath = join(baseDir, filePath)
-    const dir = dirname(fullPath)
-    mkdirSync(dir, { recursive: true })
-    writeFileSync(fullPath, content)
+    const fullPath = join(baseDir, filePath);
+    const dir = dirname(fullPath);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(fullPath, content);
   }
 }

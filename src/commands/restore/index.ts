@@ -1,23 +1,24 @@
-import { copyFileSync, existsSync, mkdirSync } from "node:fs"
-import { dirname, join } from "node:path"
-import type { Config } from "../../types/config.ts"
-import type { CopyResult, RestoreFileInfo } from "../../types/result.ts"
-import { loadConfig, validateConfigForRestore } from "../../modules/ConfigLoader.ts"
-import {
-  parseRestoreArgs,
-  showRestoreHelp,
-  type RestoreCliOptions,
-} from "../../modules/ParseCliArguments.ts"
-import { revertDotPath } from "../../modules/PathConverter.ts"
-import { resolveRestoreFiles } from "../../modules/FileResolver.ts"
+import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+
+import { runPostActions } from '../../modules/ActionRunner.ts';
+import { loadConfig, validateConfigForRestore } from '../../modules/ConfigLoader.ts';
+import { resolveRestoreFiles } from '../../modules/FileResolver.ts';
 import {
   logResult,
   logSummary,
   logRestoreFileList,
   logDryRunFileList,
-} from "../../modules/Logger.ts"
-import { confirmContinue } from "../../modules/UserPrompt.ts"
-import { runPostActions } from "../../modules/ActionRunner.ts"
+} from '../../modules/Logger.ts';
+import {
+  parseRestoreArgs,
+  showRestoreHelp,
+  type RestoreCliOptions,
+} from '../../modules/ParseCliArguments.ts';
+import { revertDotPath } from '../../modules/PathConverter.ts';
+import { confirmContinue } from '../../modules/UserPrompt.ts';
+import type { Config } from '../../types/config.ts';
+import type { CopyResult, RestoreFileInfo } from '../../types/result.ts';
 
 // ============================================
 // リストア対象ファイル情報収集
@@ -31,26 +32,26 @@ import { runPostActions } from "../../modules/ActionRunner.ts"
  */
 function collectRestoreFileInfo(
   files: string[],
-  config: Config
+  config: Config,
 ): RestoreFileInfo[] {
-  const fileInfos: RestoreFileInfo[] = []
+  const fileInfos: RestoreFileInfo[] = [];
 
   for (const backupPath of files) {
     // dot__形式を.形式に変換
-    const originalPath = revertDotPath(backupPath)
+    const originalPath = revertDotPath(backupPath);
     // base側のフルパス
-    const destFullPath = join(config.source, originalPath)
+    const destFullPath = join(config.source, originalPath);
     // 上書きかどうか
-    const isOverwrite = existsSync(destFullPath)
+    const isOverwrite = existsSync(destFullPath);
 
     fileInfos.push({
       backupPath,
       originalPath,
       isOverwrite,
-    })
+    });
   }
 
-  return fileInfos
+  return fileInfos;
 }
 
 // ============================================
@@ -63,9 +64,9 @@ function collectRestoreFileInfo(
  * @returns バックアップファイルのパス
  */
 function createBackupFile(filePath: string): string {
-  const backupPath = `${filePath}.bak`
-  copyFileSync(filePath, backupPath)
-  return backupPath
+  const backupPath = `${filePath}.bak`;
+  copyFileSync(filePath, backupPath);
+  return backupPath;
 }
 
 // ============================================
@@ -82,25 +83,25 @@ function createBackupFile(filePath: string): string {
 async function restoreFile(
   source: string,
   destination: string,
-  shouldBackup: boolean
+  shouldBackup: boolean,
 ): Promise<{ result: CopyResult; backupPath?: string }> {
-  let backupPath: string | undefined
+  let backupPath: string | undefined;
 
   try {
     // コピー先ディレクトリを作成
-    const destDir = dirname(destination)
+    const destDir = dirname(destination);
     if (!existsSync(destDir)) {
-      mkdirSync(destDir, { recursive: true })
+      mkdirSync(destDir, { recursive: true });
     }
 
     // バックアップ作成（オプション有効かつファイルが存在する場合）
     if (shouldBackup && existsSync(destination)) {
-      backupPath = createBackupFile(destination)
+      backupPath = createBackupFile(destination);
     }
 
     // ファイルをコピー
-    const sourceFile = Bun.file(source)
-    await Bun.write(destination, sourceFile)
+    const sourceFile = Bun.file(source);
+    await Bun.write(destination, sourceFile);
 
     return {
       result: {
@@ -109,7 +110,7 @@ async function restoreFile(
         destination,
       },
       backupPath,
-    }
+    };
   } catch (error) {
     return {
       result: {
@@ -118,7 +119,7 @@ async function restoreFile(
         destination,
         error: error instanceof Error ? error.message : String(error),
       },
-    }
+    };
   }
 }
 
@@ -128,96 +129,96 @@ async function restoreFile(
 
 export async function main(cliArgs?: string[]): Promise<void> {
   // 1. コマンドライン引数を解析
-  const args = cliArgs ?? process.argv.slice(2)
-  let options: RestoreCliOptions
+  const args = cliArgs ?? process.argv.slice(2);
+  let options: RestoreCliOptions;
 
   try {
-    const parsed = parseRestoreArgs(args)
+    const parsed = parseRestoreArgs(args);
     if (parsed === null) {
       // ヘルプ表示の場合は終了
-      process.exit(0)
+      process.exit(0);
     }
-    options = parsed
+    options = parsed;
   } catch (error) {
     console.error(
-      `エラー: ${error instanceof Error ? error.message : String(error)}`
-    )
-    showRestoreHelp()
-    process.exit(1)
+      `エラー: ${error instanceof Error ? error.message : String(error)}`,
+    );
+    showRestoreHelp();
+    process.exit(1);
   }
 
-  console.log("リストアスクリプトを開始します...")
-  console.log(`設定ファイル: ${options.configPath}`)
-  console.log("")
+  console.log('リストアスクリプトを開始します...');
+  console.log(`設定ファイル: ${options.configPath}`);
+  console.log('');
 
   // 2. 設定ファイルを読み込み
-  let config: Config
+  let config: Config;
   try {
-    config = await loadConfig(options.configPath)
+    config = await loadConfig(options.configPath);
   } catch (error) {
     console.error(
-      `エラー: ${error instanceof Error ? error.message : String(error)}`
-    )
-    process.exit(1)
+      `エラー: ${error instanceof Error ? error.message : String(error)}`,
+    );
+    process.exit(1);
   }
 
   // 3. 設定のバリデーション（リストア用）
   try {
-    validateConfigForRestore(config)
+    validateConfigForRestore(config);
   } catch (error) {
     console.error(
-      `エラー: ${error instanceof Error ? error.message : String(error)}`
-    )
-    process.exit(1)
+      `エラー: ${error instanceof Error ? error.message : String(error)}`,
+    );
+    process.exit(1);
   }
 
   // 4. リストア対象ファイルを取得
-  const restoreFiles = resolveRestoreFiles(config)
+  const restoreFiles = resolveRestoreFiles(config);
 
   if (restoreFiles.length === 0) {
-    console.log("リストア対象のファイルがありません。")
-    process.exit(0)
+    console.log('リストア対象のファイルがありません。');
+    process.exit(0);
   }
 
   // 5. ファイル情報を収集（上書き/新規判定）
-  const fileInfos = collectRestoreFileInfo(restoreFiles, config)
+  const fileInfos = collectRestoreFileInfo(restoreFiles, config);
 
-  console.log(`対象ファイル数: ${fileInfos.length}`)
-  console.log("")
+  console.log(`対象ファイル数: ${fileInfos.length}`);
+  console.log('');
 
   // 6. dry-run の場合はファイル一覧を表示して終了
   if (options.dryRun) {
-    logDryRunFileList(fileInfos)
-    process.exit(0)
+    logDryRunFileList(fileInfos);
+    process.exit(0);
   }
 
   // 7. ファイル一覧を表示
-  logRestoreFileList(fileInfos)
-  console.log("")
+  logRestoreFileList(fileInfos);
+  console.log('');
 
   // 8. force でなければ確認プロンプト
   if (!options.force) {
-    const confirmed = await confirmContinue()
+    const confirmed = await confirmContinue();
     if (!confirmed) {
-      console.log("キャンセルされました。")
-      process.exit(0)
+      console.log('キャンセルされました。');
+      process.exit(0);
     }
-    console.log("")
+    console.log('');
   }
 
   // 9. リストア実行
-  const results: CopyResult[] = []
+  const results: CopyResult[] = [];
 
   for (const fileInfo of fileInfos) {
-    const sourcePath = join(config.target, fileInfo.backupPath)
-    const destPath = join(config.source, fileInfo.originalPath)
+    const sourcePath = join(config.target, fileInfo.backupPath);
+    const destPath = join(config.source, fileInfo.originalPath);
 
     const { result, backupPath } = await restoreFile(
       sourcePath,
       destPath,
-      config.restore?.preserveOriginal ?? false
-    )
-    results.push(result)
+      config.restore?.preserveOriginal ?? false,
+    );
+    results.push(result);
 
     // 結果のログ出力（.形式のパスで表示）
     logResult(
@@ -226,13 +227,13 @@ export async function main(cliArgs?: string[]): Promise<void> {
         source: fileInfo.originalPath,
         destination: destPath,
       },
-      backupPath ? `${fileInfo.originalPath}.bak` : undefined
-    )
+      backupPath ? `${fileInfo.originalPath}.bak` : undefined,
+    );
   }
 
   // 10. サマリー出力
-  logSummary(results, "リストア")
+  logSummary(results, 'リストア');
 
   // 11. 後処理を実行
-  await runPostActions(config.restore?.postRunActions, config.source)
+  await runPostActions(config.restore?.postRunActions, config.source);
 }
