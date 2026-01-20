@@ -8,7 +8,6 @@ export default tseslint.config(
   {
     ignores: [
       'node_modules/**',
-      'files/**',
       'dist/**',
       '*.config.js',
       '*.config.mjs',
@@ -44,6 +43,15 @@ export default tseslint.config(
             'sibling',
             'index',
           ],
+          pathGroups: [
+            {
+              // bun:* を builtin として扱う
+              pattern: 'bun:*',
+              group: 'builtin',
+              position: 'after',
+            },
+          ],
+          pathGroupsExcludedImportTypes: [],
           'newlines-between': 'always',
           alphabetize: {
             order: 'asc',
