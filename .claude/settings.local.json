@@ -21,7 +21,10 @@
       "mcp__jetbrains",
       "Skill(test-runner)",
       "Bash(git checkout:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(grep:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh issue create:*)"
     ],
     "deny": [
       "mcp__jetbrains__execute_run_configuration",
