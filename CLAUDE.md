@@ -18,6 +18,11 @@
 - 言語: TypeScript
 - 実行環境: Bun
 
+## コマンド
+
+- `bun run test` テストを実行
+- `bun run test:coverage` カバレッジつきでテストを実行
+
 ## 命名規則
 
 - 関数名は `camelCase` で記述する
@@ -30,3 +35,7 @@
 ## ツール
 
 - ユーザーに選択肢を選ばせる場合は `AskUserQuestion` を利用する
+
+## スキル
+
+- `test-runner` テストを実行する際に必ず利用する

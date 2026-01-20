@@ -1,4 +1,7 @@
 {
+  "env": {
+    "ENABLE_TOOL_SEARCH": "true"
+  },
   "permissions": {
     "allow": [
       "Bash(bun -e:*)",
@@ -16,6 +19,20 @@
       "mcp__context7__resolve-library-id",
       "mcp__ide__getDiagnostics",
       "mcp__jetbrains"
+    ],
+    "deny": [
+      "mcp__jetbrains__execute_run_configuration",
+      "mcp__jetbrains__get_run_configurations",
+      "mcp__jetbrains__get_project_dependencies",
+      "mcp__jetbrains__get_project_modules",
+      "mcp__jetbrains__get_project_modules",
+      "mcp__jetbrains__create_new_file",
+      "mcp__jetbrains__get_all_open_file_paths",
+      "mcp__jetbrains__reformat_file"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "eslint",
+    "serena"
+  ]
 }
