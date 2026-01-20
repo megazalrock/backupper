@@ -25,34 +25,22 @@ describe("ParseCliArguments", () => {
   })
 
   describe("parseBackupArgs", () => {
-    test("引数なしでデフォルト値 configPath: 'config.ts', sync: false を返す", () => {
+    test("引数なしでデフォルト値 configPath: 'config.ts' を返す", () => {
       const result = parseBackupArgs([])
 
-      expect(result).toEqual({ configPath: "config.ts", sync: false })
+      expect(result).toEqual({ configPath: "config.ts" })
     })
 
     test("--config オプションで指定したパスを返す", () => {
       const result = parseBackupArgs(["--config", "custom.ts"])
 
-      expect(result).toEqual({ configPath: "custom.ts", sync: false })
+      expect(result).toEqual({ configPath: "custom.ts" })
     })
 
     test("-c 短縮オプションで指定したパスを返す", () => {
       const result = parseBackupArgs(["-c", "custom.ts"])
 
-      expect(result).toEqual({ configPath: "custom.ts", sync: false })
-    })
-
-    test("--sync オプションで sync: true を返す", () => {
-      const result = parseBackupArgs(["--sync"])
-
-      expect(result).toEqual({ configPath: "config.ts", sync: true })
-    })
-
-    test("--config と --sync の組み合わせで両方設定される", () => {
-      const result = parseBackupArgs(["--config", "custom.ts", "--sync"])
-
-      expect(result).toEqual({ configPath: "custom.ts", sync: true })
+      expect(result).toEqual({ configPath: "custom.ts" })
     })
 
     test("--help オプションでヘルプを表示し null を返す", () => {
@@ -89,7 +77,6 @@ describe("ParseCliArguments", () => {
       expect(result).toEqual({
         configPath: "config.ts",
         dryRun: false,
-        backup: false,
         force: false,
       })
     })
@@ -100,7 +87,6 @@ describe("ParseCliArguments", () => {
       expect(result).toEqual({
         configPath: "custom.ts",
         dryRun: false,
-        backup: false,
         force: false,
       })
     })
@@ -111,7 +97,6 @@ describe("ParseCliArguments", () => {
       expect(result).toEqual({
         configPath: "custom.ts",
         dryRun: false,
-        backup: false,
         force: false,
       })
     })
@@ -122,18 +107,6 @@ describe("ParseCliArguments", () => {
       expect(result).toEqual({
         configPath: "config.ts",
         dryRun: true,
-        backup: false,
-        force: false,
-      })
-    })
-
-    test("--backup フラグで backup: true を返す", () => {
-      const result = parseRestoreArgs(["--backup"])
-
-      expect(result).toEqual({
-        configPath: "config.ts",
-        dryRun: false,
-        backup: true,
         force: false,
       })
     })
@@ -144,7 +117,6 @@ describe("ParseCliArguments", () => {
       expect(result).toEqual({
         configPath: "config.ts",
         dryRun: false,
-        backup: false,
         force: true,
       })
     })
@@ -155,7 +127,6 @@ describe("ParseCliArguments", () => {
       expect(result).toEqual({
         configPath: "config.ts",
         dryRun: false,
-        backup: false,
         force: true,
       })
     })
@@ -165,14 +136,12 @@ describe("ParseCliArguments", () => {
         "--config",
         "my-config.ts",
         "--dry-run",
-        "--backup",
         "--force",
       ])
 
       expect(result).toEqual({
         configPath: "my-config.ts",
         dryRun: true,
-        backup: true,
         force: true,
       })
     })

@@ -1,4 +1,28 @@
 /**
+ * バックアップ固有の設定
+ */
+export interface BackupOptions {
+  /**
+   * 同期モード
+   * true の場合、ソースに存在しないファイルをターゲットから削除
+   * @default false
+   */
+  sync?: boolean
+}
+
+/**
+ * リストア固有の設定
+ */
+export interface RestoreOptions {
+  /**
+   * 元のファイルを保存
+   * true の場合、既存ファイルを上書きする前に .bak ファイルを作成
+   * @default false
+   */
+  preserveOriginal?: boolean
+}
+
+/**
  * コピー設定の型定義
  */
 export interface Config {
@@ -17,4 +41,9 @@ export interface Config {
   includes: string[]
   /** 除外するファイル/ディレクトリのパターン（glob形式） */
   excludes: string[]
+
+  /** バックアップ固有の設定 */
+  backup?: BackupOptions
+  /** リストア固有の設定 */
+  restore?: RestoreOptions
 }

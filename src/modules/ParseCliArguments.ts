@@ -22,7 +22,6 @@ export type MainCliResult =
  */
 export interface BackupCliOptions {
   configPath: string
-  sync: boolean
 }
 
 /**
@@ -31,7 +30,6 @@ export interface BackupCliOptions {
 export interface RestoreCliOptions {
   configPath: string
   dryRun: boolean
-  backup: boolean
   force: boolean
 }
 
@@ -51,7 +49,6 @@ export function showBackupHelp(): void {
 
 オプション:
   --config, -c <パス>  設定ファイルのパスを指定（デフォルト: ${DEFAULT_CONFIG_PATH}）
-  --sync               ソースで削除されたファイルをターゲットからも削除
   --help, -h           このヘルプを表示
 `)
 }
@@ -62,7 +59,6 @@ export function showBackupHelp(): void {
 export function parseBackupArgs(args: string[]): BackupCliOptions | null {
   const options: BackupCliOptions = {
     configPath: DEFAULT_CONFIG_PATH,
-    sync: false,
   }
 
   for (let i = 0; i < args.length; i++) {
@@ -77,8 +73,6 @@ export function parseBackupArgs(args: string[]): BackupCliOptions | null {
       }
       options.configPath = nextArg
       i++ // 次の引数をスキップ
-    } else if (arg === "--sync") {
-      options.sync = true
     }
   }
 
@@ -103,7 +97,6 @@ export function showRestoreHelp(): void {
 オプション:
   --config, -c <パス>  設定ファイルのパスを指定（デフォルト: ${DEFAULT_CONFIG_PATH}）
   --dry-run            実際のコピーなしに対象ファイル一覧を表示
-  --backup             上書き前に既存ファイルを .bak として保存
   --force, -f          確認プロンプトをスキップ
   --help, -h           このヘルプを表示
 `)
@@ -116,7 +109,6 @@ export function parseRestoreArgs(args: string[]): RestoreCliOptions | null {
   const options: RestoreCliOptions = {
     configPath: DEFAULT_CONFIG_PATH,
     dryRun: false,
-    backup: false,
     force: false,
   }
 
@@ -134,8 +126,6 @@ export function parseRestoreArgs(args: string[]): RestoreCliOptions | null {
       i++ // 次の引数をスキップ
     } else if (arg === "--dry-run") {
       options.dryRun = true
-    } else if (arg === "--backup") {
-      options.backup = true
     } else if (arg === "--force" || arg === "-f") {
       options.force = true
     }

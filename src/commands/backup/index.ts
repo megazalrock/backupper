@@ -112,9 +112,6 @@ export async function main(cliArgs?: string[]): Promise<void> {
 
   console.log("コピースクリプトを開始します...")
   console.log(`設定ファイル: ${options.configPath}`)
-  if (options.sync) {
-    console.log("同期モード: 有効（ソースに存在しないファイルを削除）")
-  }
   console.log("")
 
   // 2. 設定ファイルを読み込み
@@ -170,7 +167,7 @@ export async function main(cliArgs?: string[]): Promise<void> {
   // 6. 同期モード: 孤児ファイルの削除
   const deleteResults: DeleteResult[] = []
 
-  if (options.sync) {
+  if (config.backup?.sync) {
     const orphanedFiles = findOrphanedFiles(copiedFiles, config)
 
     if (orphanedFiles.length > 0) {
@@ -193,7 +190,7 @@ export async function main(cliArgs?: string[]): Promise<void> {
   }
 
   // 7. サマリー出力
-  if (options.sync) {
+  if (config.backup?.sync) {
     logSyncSummary(copyResults, deleteResults)
   } else {
     logSummary(copyResults, "コピー")

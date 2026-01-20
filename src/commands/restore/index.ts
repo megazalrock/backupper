@@ -214,7 +214,7 @@ export async function main(cliArgs?: string[]): Promise<void> {
     const { result, backupPath } = await restoreFile(
       sourcePath,
       destPath,
-      options.backup
+      config.restore?.preserveOriginal ?? false
     )
     results.push(result)
 

@@ -26,4 +26,12 @@ export const config: Config = {
     "*.log",
     ".DS_Store",
   ],
+  // === バックアップ固有の設定 ===
+  // backup: {
+  //   sync: false, // true: ソースに存在しないファイルをターゲットから削除
+  // },
+  // === リストア固有の設定 ===
+  // restore: {
+  //   preserveOriginal: false, // true: リストア時に既存ファイルを.bakとして保存
+  // },
 }
