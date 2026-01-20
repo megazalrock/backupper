@@ -1,12 +1,13 @@
-import { existsSync } from "node:fs"
-import { resolve } from "node:path"
-import type { Config } from "../types/config.ts"
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+import type { Config } from '../types/config.ts';
 
 // ============================================
 // 定数
 // ============================================
 
-export const DEFAULT_CONFIG_PATH = "config.ts"
+export const DEFAULT_CONFIG_PATH = 'config.ts';
 
 // ============================================
 // 設定読み込み
@@ -16,20 +17,20 @@ export const DEFAULT_CONFIG_PATH = "config.ts"
  * 設定ファイルを動的に読み込む
  */
 export async function loadConfig(configPath: string): Promise<Config> {
-  const absolutePath = resolve(configPath)
+  const absolutePath = resolve(configPath);
 
   if (!existsSync(absolutePath)) {
-    throw new Error(`設定ファイルが見つかりません: ${absolutePath}`)
+    throw new Error(`設定ファイルが見つかりません: ${absolutePath}`);
   }
 
-  const module = await import(absolutePath)
-  const config = module.config as Config | undefined
+  const module = await import(absolutePath);
+  const config = module.config as Config | undefined;
 
   if (!config) {
-    throw new Error(`設定ファイルに config がエクスポートされていません: ${absolutePath}`)
+    throw new Error(`設定ファイルに config がエクスポートされていません: ${absolutePath}`);
   }
 
-  return config
+  return config;
 }
 
 /**
@@ -37,11 +38,11 @@ export async function loadConfig(configPath: string): Promise<Config> {
  */
 export function validateConfig(cfg: Config): void {
   if (!existsSync(cfg.source)) {
-    throw new Error(`ベースパスが存在しません: ${cfg.source}`)
+    throw new Error(`ベースパスが存在しません: ${cfg.source}`);
   }
 
-  if (!cfg.target || cfg.target.trim() === "") {
-    throw new Error("outputDir が指定されていません")
+  if (!cfg.target || cfg.target.trim() === '') {
+    throw new Error('outputDir が指定されていません');
   }
 }
 
@@ -52,14 +53,14 @@ export function validateConfig(cfg: Config): void {
  */
 export function validateConfigForRestore(cfg: Config): void {
   if (!existsSync(cfg.source)) {
-    throw new Error(`ベースパスが存在しません: ${cfg.source}`)
+    throw new Error(`ベースパスが存在しません: ${cfg.source}`);
   }
 
-  if (!cfg.target || cfg.target.trim() === "") {
-    throw new Error("outputDir が指定されていません")
+  if (!cfg.target || cfg.target.trim() === '') {
+    throw new Error('outputDir が指定されていません');
   }
 
   if (!existsSync(cfg.target)) {
-    throw new Error(`出力ディレクトリが存在しません: ${cfg.target}`)
+    throw new Error(`出力ディレクトリが存在しません: ${cfg.target}`);
   }
 }

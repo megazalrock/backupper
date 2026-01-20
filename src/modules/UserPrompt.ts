@@ -17,17 +17,17 @@ export interface InputReader {
  */
 export const stdinReader: InputReader = {
   async read(): Promise<string> {
-    const stdin = Bun.stdin.stream()
-    const reader = stdin.getReader()
+    const stdin = Bun.stdin.stream();
+    const reader = stdin.getReader();
     try {
-      const { value } = await reader.read()
-      if (!value) return ""
-      return new TextDecoder().decode(value).trim().toLowerCase()
+      const { value } = await reader.read();
+      if (!value) return '';
+      return new TextDecoder().decode(value).trim().toLowerCase();
     } finally {
-      reader.releaseLock()
+      reader.releaseLock();
     }
-  }
-}
+  },
+};
 
 /**
  * テスト用のモックリーダーを作成するファクトリ関数
@@ -37,9 +37,9 @@ export const stdinReader: InputReader = {
 export function createMockReader(input: string): InputReader {
   return {
     async read(): Promise<string> {
-      return input
-    }
-  }
+      return input;
+    },
+  };
 }
 
 /**
@@ -49,12 +49,12 @@ export function createMockReader(input: string): InputReader {
  * @returns true: 続行, false: キャンセル
  */
 export async function confirmContinue(
-  message = "続行しますか？ (Y/n): ",
-  reader: InputReader = stdinReader
+  message = '続行しますか？ (Y/n): ',
+  reader: InputReader = stdinReader,
 ): Promise<boolean> {
-  process.stdout.write(message)
-  const input = await reader.read()
+  process.stdout.write(message);
+  const input = await reader.read();
 
   // 空入力、"y"、"yes" の場合は続行
-  return input === "" || input === "y" || input === "yes"
+  return input === '' || input === 'y' || input === 'yes';
 }
