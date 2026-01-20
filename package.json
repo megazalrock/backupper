@@ -12,6 +12,7 @@
     "test:watch": "bun test --watch"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.3.11",
     "@types/bun": "latest"
   },
   "peerDependencies": {
