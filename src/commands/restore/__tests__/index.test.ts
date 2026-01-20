@@ -455,6 +455,38 @@ export const config = {
         // confirmContinue が呼ばれたことを確認（確認プロンプト表示を意図）
         expect(confirmContinueMock).toHaveBeenCalled()
       })
+
+      test("確認プロンプトでキャンセルした場合、メッセージを出力して終了する", async () => {
+        const sourceDir = join(tempDir, "source")
+        const targetDir = join(tempDir, "target")
+
+        createTestFiles(tempDir, {
+          "source/.gitkeep": "",
+          "target/file.txt": "content",
+        })
+
+        const configContent = `
+export const config = {
+  source: "${sourceDir}",
+  target: "${targetDir}",
+  includes: ["file.txt"],
+  excludes: [],
+}
+`
+        createTestFiles(tempDir, { "config.ts": configContent })
+
+        // モックを false を返すように変更
+        confirmContinueMock.mockImplementationOnce(() => Promise.resolve(false))
+
+        await expect(
+          main(["--config", join(tempDir, "config.ts")])
+        ).rejects.toThrow("process.exit called")
+
+        expect(exitSpy).toHaveBeenCalledWith(0)
+        expect(consoleLogSpy).toHaveBeenCalledWith("キャンセルされました。")
+        // ファイルがリストアされていないことを確認
+        expect(existsSync(join(sourceDir, "file.txt"))).toBe(false)
+      })
     })
   })
 })

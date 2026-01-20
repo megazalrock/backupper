@@ -6,6 +6,7 @@ import {
   getFilesRecursively,
   resolveTargetFiles,
   resolveRestoreFiles,
+  findOrphanedFiles,
 } from "../FileResolver"
 import type { Config } from "../../types/config"
 import {
@@ -274,6 +275,62 @@ describe("FileResolver", () => {
 
         const result = resolveRestoreFiles(config)
         expect(result.sort()).toEqual(["dot__env", "dot__gitignore"])
+      })
+
+      test("glob パターンにマッチするファイルを取得する", () => {
+        createTestFiles(tempDir, {
+          "output/src/index.ts": "export {}",
+          "output/src/utils.ts": "export {}",
+          "output/src/helper.js": "module.exports = {}",
+        })
+
+        const config: Config = {
+          source: `${tempDir}/base`,
+          target: `${tempDir}/output`,
+          includes: ["**/*.ts"],
+          excludes: [],
+        }
+
+        const result = resolveRestoreFiles(config)
+        expect(result.sort()).toEqual(["src/index.ts", "src/utils.ts"])
+      })
+    })
+
+    describe("findOrphanedFiles", () => {
+      test("glob パターンで孤児ファイルを検出する", () => {
+        createTestFiles(tempDir, {
+          "target/index.ts": "export {}",
+          "target/orphan.ts": "orphan",
+        })
+
+        const sourceFiles = ["index.ts"]
+        const config: Config = {
+          source: `${tempDir}/source`,
+          target: `${tempDir}/target`,
+          includes: ["**/*.ts"],
+          excludes: [],
+        }
+
+        const result = findOrphanedFiles(sourceFiles, config)
+        expect(result).toEqual(["orphan.ts"])
+      })
+
+      test("単一ファイルパターンで孤児ファイルを検出する", () => {
+        createTestFiles(tempDir, {
+          "target/config.json": "{}",
+          "target/orphan.json": "{}",
+        })
+
+        const sourceFiles = ["config.json"]
+        const config: Config = {
+          source: `${tempDir}/source`,
+          target: `${tempDir}/target`,
+          includes: ["config.json", "orphan.json"],
+          excludes: [],
+        }
+
+        const result = findOrphanedFiles(sourceFiles, config)
+        expect(result).toEqual(["orphan.json"])
       })
     })
   })
