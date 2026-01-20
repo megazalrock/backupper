@@ -3,17 +3,19 @@
  * ファイル一覧取得、除外判定、glob処理
  */
 
-import { existsSync, readdirSync } from "node:fs"
-import { basename, join, relative } from "node:path"
-import type { Config } from "../types/config.ts"
-import { convertDotPath, revertDotPath } from "./PathConverter.ts"
+import { existsSync, readdirSync } from 'node:fs';
+import { basename, join, relative } from 'node:path';
+
+import type { Config } from '../types/config.ts';
+
+import { convertDotPath, revertDotPath } from './PathConverter.ts';
 
 /**
  * glob 特殊文字を含むかどうかを判定する
  * glob 特殊文字: *, ?, [, ], {, }
  */
 export function isGlobPattern(pattern: string): boolean {
-  return /[*?\[\]{}]/.test(pattern)
+  return /[*?[\]{}]/.test(pattern);
 }
 
 /**
@@ -21,41 +23,41 @@ export function isGlobPattern(pattern: string): boolean {
  */
 export function shouldExclude(
   relativePath: string,
-  excludePatterns: string[]
+  excludePatterns: string[],
 ): boolean {
   for (const pattern of excludePatterns) {
-    const glob = new Bun.Glob(pattern)
+    const glob = new Bun.Glob(pattern);
     // パス全体とファイル名の両方でチェック
     if (glob.match(relativePath) || glob.match(basename(relativePath))) {
-      return true
+      return true;
     }
     // ディレクトリ名を含むパスのチェック
-    const parts = relativePath.split("/")
+    const parts = relativePath.split('/');
     for (const part of parts) {
       if (glob.match(part)) {
-        return true
+        return true;
       }
     }
   }
-  return false
+  return false;
 }
 
 /**
  * glob パターンにマッチするファイルを取得する
  */
 export function resolveGlobPattern(pattern: string, basePath: string): string[] {
-  const glob = new Bun.Glob(pattern)
-  const files: string[] = []
+  const glob = new Bun.Glob(pattern);
+  const files: string[] = [];
 
   for (const file of glob.scanSync({
     cwd: basePath,
     dot: true, // . で始まるファイル/ディレクトリにもマッチ
     onlyFiles: true,
   })) {
-    files.push(file)
+    files.push(file);
   }
 
-  return files
+  return files;
 }
 
 /**
@@ -63,28 +65,28 @@ export function resolveGlobPattern(pattern: string, basePath: string): string[] 
  */
 export function getFilesRecursively(
   dirPath: string,
-  basePath: string
+  basePath: string,
 ): string[] {
-  const files: string[] = []
+  const files: string[] = [];
 
   if (!existsSync(dirPath)) {
-    return files
+    return files;
   }
 
-  const entries = readdirSync(dirPath, { withFileTypes: true })
+  const entries = readdirSync(dirPath, { withFileTypes: true });
 
   for (const entry of entries) {
-    const fullPath = join(dirPath, entry.name)
-    const relativePath = relative(basePath, fullPath)
+    const fullPath = join(dirPath, entry.name);
+    const relativePath = relative(basePath, fullPath);
 
     if (entry.isDirectory()) {
-      files.push(...getFilesRecursively(fullPath, basePath))
+      files.push(...getFilesRecursively(fullPath, basePath));
     } else {
-      files.push(relativePath)
+      files.push(relativePath);
     }
   }
 
-  return files
+  return files;
 }
 
 /**
@@ -95,28 +97,28 @@ export function getFilesRecursively(
  * - それ以外 → 単一ファイルとして扱う
  */
 export function resolveTargetFiles(cfg: Config): string[] {
-  const files: string[] = []
+  const files: string[] = [];
 
   for (const target of cfg.includes) {
-    if (target.endsWith("/")) {
+    if (target.endsWith('/')) {
       // ディレクトリ全体
-      const fullPath = join(cfg.source, target)
-      const dirFiles = getFilesRecursively(fullPath, cfg.source)
-      files.push(...dirFiles)
+      const fullPath = join(cfg.source, target);
+      const dirFiles = getFilesRecursively(fullPath, cfg.source);
+      files.push(...dirFiles);
     } else if (isGlobPattern(target)) {
       // glob パターン
-      const globFiles = resolveGlobPattern(target, cfg.source)
-      files.push(...globFiles)
+      const globFiles = resolveGlobPattern(target, cfg.source);
+      files.push(...globFiles);
     } else {
       // 単一ファイル
-      const fullPath = join(cfg.source, target)
+      const fullPath = join(cfg.source, target);
       if (existsSync(fullPath)) {
-        files.push(target)
+        files.push(target);
       }
     }
   }
 
-  return files
+  return files;
 }
 
 /**
@@ -125,46 +127,46 @@ export function resolveTargetFiles(cfg: Config): string[] {
  */
 export function resolveRestoreFiles(cfg: Config): string[] {
   // outputDir内の全ファイルを取得
-  const allFiles = getFilesRecursively(cfg.target, cfg.target)
-  const matchedFiles: string[] = []
+  const allFiles = getFilesRecursively(cfg.target, cfg.target);
+  const matchedFiles: string[] = [];
 
   for (const file of allFiles) {
     // dot__形式のパスを元のパス形式（.形式）に変換してパターンマッチング
-    const originalPath = revertDotPath(file)
+    const originalPath = revertDotPath(file);
 
     // includesパターンにマッチするか確認
-    let isIncluded = false
+    let isIncluded = false;
     for (const pattern of cfg.includes) {
-      if (pattern.endsWith("/")) {
+      if (pattern.endsWith('/')) {
         // ディレクトリパターン: パスがこのディレクトリで始まるか確認
-        const dirPattern = pattern.slice(0, -1) // 末尾の / を除去
-        if (originalPath.startsWith(dirPattern + "/") || originalPath.startsWith(dirPattern)) {
-          isIncluded = true
-          break
+        const dirPattern = pattern.slice(0, -1); // 末尾の / を除去
+        if (originalPath.startsWith(dirPattern + '/') || originalPath.startsWith(dirPattern)) {
+          isIncluded = true;
+          break;
         }
       } else if (isGlobPattern(pattern)) {
         // globパターン
-        const glob = new Bun.Glob(pattern)
+        const glob = new Bun.Glob(pattern);
         if (glob.match(originalPath)) {
-          isIncluded = true
-          break
+          isIncluded = true;
+          break;
         }
       } else {
         // 単一ファイル: 完全一致
         if (originalPath === pattern) {
-          isIncluded = true
-          break
+          isIncluded = true;
+          break;
         }
       }
     }
 
     // excludesパターンに該当しないか確認
     if (isIncluded && !shouldExclude(originalPath, cfg.excludes)) {
-      matchedFiles.push(file)
+      matchedFiles.push(file);
     }
   }
 
-  return matchedFiles
+  return matchedFiles;
 }
 
 /**
@@ -173,54 +175,54 @@ export function resolveRestoreFiles(cfg: Config): string[] {
  */
 export function findOrphanedFiles(
   sourceFiles: string[],
-  config: Config
+  config: Config,
 ): string[] {
   // ソースファイルを convertDotPath() で変換してセットを作成
-  const sourceSet = new Set(sourceFiles.map((file) => convertDotPath(file)))
+  const sourceSet = new Set(sourceFiles.map((file) => convertDotPath(file)));
 
   // ターゲットディレクトリ内の全ファイルを取得
-  const targetFiles = getFilesRecursively(config.target, config.target)
+  const targetFiles = getFilesRecursively(config.target, config.target);
 
-  const orphanedFiles: string[] = []
+  const orphanedFiles: string[] = [];
 
   for (const targetFile of targetFiles) {
     // ターゲットファイルがソースセットに含まれていない場合
     if (!sourceSet.has(targetFile)) {
       // dot__形式のパスを元のパス形式（.形式）に変換してパターンマッチング
-      const originalPath = revertDotPath(targetFile)
+      const originalPath = revertDotPath(targetFile);
 
       // includesパターンの範囲内かどうか確認
-      let isInScope = false
+      let isInScope = false;
       for (const pattern of config.includes) {
-        if (pattern.endsWith("/")) {
+        if (pattern.endsWith('/')) {
           // ディレクトリパターン: パスがこのディレクトリで始まるか確認
-          const dirPattern = pattern.slice(0, -1) // 末尾の / を除去
-          if (originalPath.startsWith(dirPattern + "/") || originalPath.startsWith(dirPattern)) {
-            isInScope = true
-            break
+          const dirPattern = pattern.slice(0, -1); // 末尾の / を除去
+          if (originalPath.startsWith(dirPattern + '/') || originalPath.startsWith(dirPattern)) {
+            isInScope = true;
+            break;
           }
         } else if (isGlobPattern(pattern)) {
           // globパターン
-          const glob = new Bun.Glob(pattern)
+          const glob = new Bun.Glob(pattern);
           if (glob.match(originalPath)) {
-            isInScope = true
-            break
+            isInScope = true;
+            break;
           }
         } else {
           // 単一ファイル: 完全一致
           if (originalPath === pattern) {
-            isInScope = true
-            break
+            isInScope = true;
+            break;
           }
         }
       }
 
       // includesパターンの範囲内かつ excludesパターンに該当しない場合
       if (isInScope && !shouldExclude(originalPath, config.excludes)) {
-        orphanedFiles.push(targetFile)
+        orphanedFiles.push(targetFile);
       }
     }
   }
 
-  return orphanedFiles
+  return orphanedFiles;
 }

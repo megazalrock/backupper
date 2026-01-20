@@ -1,19 +1,19 @@
-import type { Config } from 'src/types/config.ts'
+import type { Config } from 'src/types/config.ts';
 
 /**
  * コピー設定
  */
 export const config: Config = {
-  source: "/Users/otto/workspace/craftbank/arrangement-env/front",
-  target: "files",
+  source: '/Users/otto/workspace/craftbank/arrangement-env/front',
+  target: 'files',
   includes: [
     // ディレクトリ全体（末尾 / ）
-    ".claude/",
-    ".mgzl/",
+    '.claude/',
+    '.mgzl/',
 
     // 単一ファイル
-    ".mcp.json",
-    "tsconfig.mgzl.json",
+    '.mcp.json',
+    'tsconfig.mgzl.json',
 
     // glob パターン（例）
     // "src/**/*.ts",        // src 配下の全 .ts ファイル
@@ -22,9 +22,9 @@ export const config: Config = {
     // "config/*.{ts,js}",   // config 直下の .ts と .js ファイル
   ],
   excludes: [
-    "node_modules",
-    "*.log",
-    ".DS_Store",
+    'node_modules',
+    '*.log',
+    '.DS_Store',
   ],
   // === バックアップ固有の設定 ===
   // backup: {
@@ -34,4 +34,4 @@ export const config: Config = {
   // restore: {
   //   preserveOriginal: false, // true: リストア時に既存ファイルを.bakとして保存
   // },
-}
+};

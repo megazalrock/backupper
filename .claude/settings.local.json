@@ -18,7 +18,8 @@
       "mcp__context7__query-docs",
       "mcp__context7__resolve-library-id",
       "mcp__ide__getDiagnostics",
-      "mcp__jetbrains"
+      "mcp__jetbrains",
+      "Skill(test-runner)"
     ],
     "deny": [
       "mcp__jetbrains__execute_run_configuration",
@@ -31,8 +32,8 @@
       "mcp__jetbrains__reformat_file"
     ]
   },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
-    "eslint",
     "serena"
   ]
 }

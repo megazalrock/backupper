@@ -8,14 +8,14 @@
  * 例: .claude/settings.json → dot__claude/settings.json
  */
 export function convertDotPath(relativePath: string): string {
-  const parts = relativePath.split("/")
+  const parts = relativePath.split('/');
   const convertedParts = parts.map((part) => {
-    if (part.startsWith(".") && part.length > 1) {
-      return `dot__${part.slice(1)}`
+    if (part.startsWith('.') && part.length > 1) {
+      return `dot__${part.slice(1)}`;
     }
-    return part
-  })
-  return convertedParts.join("/")
+    return part;
+  });
+  return convertedParts.join('/');
 }
 
 /**
@@ -23,12 +23,12 @@ export function convertDotPath(relativePath: string): string {
  * 例: dot__claude/settings.json → .claude/settings.json
  */
 export function revertDotPath(convertedPath: string): string {
-  const parts = convertedPath.split("/")
+  const parts = convertedPath.split('/');
   const revertedParts = parts.map((part) => {
-    if (part.startsWith("dot__")) {
-      return `.${part.slice(5)}`
+    if (part.startsWith('dot__')) {
+      return `.${part.slice(5)}`;
     }
-    return part
-  })
-  return revertedParts.join("/")
+    return part;
+  });
+  return revertedParts.join('/');
 }
