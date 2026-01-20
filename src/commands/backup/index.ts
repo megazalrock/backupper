@@ -7,6 +7,7 @@ import { parseArgs, showHelp, type BackupCliOptions } from "../../modules/ParseC
 import { convertDotPath } from "../../modules/PathConverter.ts"
 import { findOrphanedFiles, resolveTargetFiles, shouldExclude } from "../../modules/FileResolver.ts"
 import { logDeleteResult, logResult, logSummary, logSyncSummary } from "../../modules/Logger.ts"
+import { runPostActions } from "../../modules/ActionRunner.ts"
 
 // ============================================
 // コピー・削除実行関数
@@ -195,4 +196,7 @@ export async function main(cliArgs?: string[]): Promise<void> {
   } else {
     logSummary(copyResults, "コピー")
   }
+
+  // 8. 後処理を実行
+  await runPostActions(config.backup?.postRunActions, config.target)
 }

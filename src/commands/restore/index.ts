@@ -17,6 +17,7 @@ import {
   logDryRunFileList,
 } from "../../modules/Logger.ts"
 import { confirmContinue } from "../../modules/UserPrompt.ts"
+import { runPostActions } from "../../modules/ActionRunner.ts"
 
 // ============================================
 // リストア対象ファイル情報収集
@@ -231,4 +232,7 @@ export async function main(cliArgs?: string[]): Promise<void> {
 
   // 10. サマリー出力
   logSummary(results, "リストア")
+
+  // 11. 後処理を実行
+  await runPostActions(config.restore?.postRunActions, config.source)
 }
