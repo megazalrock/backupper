@@ -12,18 +12,20 @@ import {
   type Mock,
 } from 'bun:test';
 
-// confirmContinue をモックして stdin 待機を回避
-const confirmContinueMock = mock(() => Promise.resolve(true));
-mock.module('../../../modules/UserPrompt.ts', () => ({
-  confirmContinue: confirmContinueMock,
-}));
-
 import {
   createTempDir,
   cleanupTempDir,
   createTestFiles,
 } from '../../../modules/__tests__/helpers/tempDir';
-import { main } from '../index';
+import { main, type MainDependencies } from '../index';
+
+// confirmContinue をモックして stdin 待機を回避
+const confirmContinueMock = mock(() => Promise.resolve(true));
+
+// 依存性注入用オブジェクト
+const deps: MainDependencies = {
+  confirmContinue: confirmContinueMock,
+};
 
 describe('commands/restore', () => {
   describe('main', () => {
@@ -34,6 +36,10 @@ describe('commands/restore', () => {
     let stdoutWriteSpy: Mock<typeof process.stdout.write>;
 
     beforeEach(() => {
+      // confirmContinueMock のリセット
+      confirmContinueMock.mockClear();
+      confirmContinueMock.mockImplementation(() => Promise.resolve(true));
+
       tempDir = createTempDir('restore-test-');
       exitSpy = spyOn(process, 'exit').mockImplementation(() => {
         throw new Error('process.exit called');
@@ -447,11 +453,8 @@ export const config = {
 `;
         createTestFiles(tempDir, { 'config.ts': configContent });
 
-        // モックの呼び出し回数をリセット
-        confirmContinueMock.mockClear();
-
         // モックがtrueを返すので正常に処理が進む
-        await main(['--config', join(tempDir, 'config.ts')]);
+        await main(['--config', join(tempDir, 'config.ts')], deps);
 
         // confirmContinue が呼ばれたことを確認（確認プロンプト表示を意図）
         expect(confirmContinueMock).toHaveBeenCalled();
@@ -480,7 +483,7 @@ export const config = {
         confirmContinueMock.mockImplementationOnce(() => Promise.resolve(false));
 
         await expect(
-          main(['--config', join(tempDir, 'config.ts')]),
+          main(['--config', join(tempDir, 'config.ts')], deps),
         ).rejects.toThrow('process.exit called');
 
         expect(exitSpy).toHaveBeenCalledWith(0);

@@ -16,9 +16,17 @@ import {
   type RestoreCliOptions,
 } from '../../modules/ParseCliArguments.ts';
 import { revertDotPath } from '../../modules/PathConverter.ts';
-import { confirmContinue } from '../../modules/UserPrompt.ts';
+import { confirmContinue as defaultConfirmContinue } from '../../modules/UserPrompt.ts';
 import type { Config } from '../../types/config.ts';
 import type { CopyResult, RestoreFileInfo } from '../../types/result.ts';
+
+/**
+ * main関数の依存性注入用インターフェース
+ * テスト時にモック関数を注入可能にする
+ */
+export interface MainDependencies {
+  confirmContinue?: () => Promise<boolean>
+}
 
 // ============================================
 // リストア対象ファイル情報収集
@@ -127,7 +135,11 @@ async function restoreFile(
 // メイン処理
 // ============================================
 
-export async function main(cliArgs?: string[]): Promise<void> {
+export async function main(
+  cliArgs?: string[],
+  deps: MainDependencies = {},
+): Promise<void> {
+  const { confirmContinue = defaultConfirmContinue } = deps;
   // 1. コマンドライン引数を解析
   const args = cliArgs ?? process.argv.slice(2);
   let options: RestoreCliOptions;
