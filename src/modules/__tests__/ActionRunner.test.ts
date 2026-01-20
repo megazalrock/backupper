@@ -88,6 +88,29 @@ describe("ActionRunner", () => {
       expect(result.success).toBe(true)
     })
 
+    test("cwd 未指定時に defaultCwd で実行される", async () => {
+      const { realpathSync } = await import("node:fs")
+      const defaultCwd = "/tmp"
+      const expectedCwd = realpathSync(defaultCwd) // macOS では /private/tmp
+      const testFile = `${expectedCwd}/test_defaultcwd_${Date.now()}.txt`
+
+      const action: Action = {
+        command: "sh",
+        args: ["-c", `pwd > ${testFile}`],
+        // cwd を指定しない
+      }
+
+      const result = await runAction(action, defaultCwd)
+
+      expect(result.success).toBe(true)
+
+      const output = await Bun.file(testFile).text()
+      expect(output.trim()).toBe(expectedCwd)
+
+      // クリーンアップ
+      await Bun.spawn(["rm", testFile]).exited
+    })
+
     test("env 指定時に環境変数がマージされる", async () => {
       const action: Action = {
         command: "sh",
