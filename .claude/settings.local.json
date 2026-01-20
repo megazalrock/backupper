@@ -37,5 +37,8 @@
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "serena"
-  ]
+  ],
+  "enabledPlugins": {
+    "github@claude-plugins-official": true
+  }
 }
