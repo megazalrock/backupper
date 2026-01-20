@@ -1,6 +1,7 @@
 ---
 name: test-runner
 description: テストを実行するスキルです。テストの実行、カバレッジの計測を求められた場合に**必ず**使用します。
+context: fork
 ---
 # Test runner
 
