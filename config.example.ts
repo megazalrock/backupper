@@ -1,9 +1,9 @@
-import type { Config } from 'src/types/config.ts';
+import { defineConfig } from './src/types/config.ts';
 
 /**
  * コピー設定
  */
-export const config: Config = {
+export default defineConfig({
   source: '/Users/otto/workspace/craftbank/arrangement-env/front',
   target: 'files',
   includes: [
@@ -34,4 +34,4 @@ export const config: Config = {
   // restore: {
   //   preserveOriginal: false, // true: リストア時に既存ファイルを.bakとして保存
   // },
-};
+});

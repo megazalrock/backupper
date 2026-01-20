@@ -85,3 +85,22 @@ export interface Config {
   /** リストア固有の設定 */
   restore?: RestoreOptions
 }
+
+/**
+ * 設定オブジェクトを型安全に定義するためのヘルパー関数
+ *
+ * @example
+ * ```typescript
+ * import { defineConfig } from './src/types/config.ts';
+ *
+ * export default defineConfig({
+ *   source: '/path/to/source',
+ *   target: './files',
+ *   includes: ['.claude/', 'config.ts'],
+ *   excludes: ['node_modules'],
+ * });
+ * ```
+ */
+export function defineConfig(config: Config): Config {
+  return config;
+}

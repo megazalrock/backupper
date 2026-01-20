@@ -89,6 +89,72 @@ export const settings = {
       );
     });
 
+    test('default エクスポートから config を読み込む', async () => {
+      const configContent = `
+export default {
+  source: "/test/default-export",
+  target: "./files",
+  includes: ["lib/"],
+  excludes: ["dist/"],
+}
+`;
+      createTestFiles(tempDir, {
+        'default-export-config.ts': configContent,
+      });
+
+      const result = await loadConfig(join(tempDir, 'default-export-config.ts'));
+      expect(result).toEqual({
+        source: '/test/default-export',
+        target: './files',
+        includes: ['lib/'],
+        excludes: ['dist/'],
+      });
+    });
+
+    test('default と config の両方がある場合、default を優先する', async () => {
+      const configContent = `
+export default {
+  source: "/test/default-wins",
+  target: "./default-files",
+  includes: ["default/"],
+  excludes: [],
+}
+
+export const config = {
+  source: "/test/named-export",
+  target: "./named-files",
+  includes: ["named/"],
+  excludes: [],
+}
+`;
+      createTestFiles(tempDir, {
+        'both-exports-config.ts': configContent,
+      });
+
+      const result = await loadConfig(join(tempDir, 'both-exports-config.ts'));
+      expect(result.source).toBe('/test/default-wins');
+      expect(result.target).toBe('./default-files');
+    });
+
+    test('default も config もない場合、ヒント付きエラーをスローする', async () => {
+      const configContent = `
+export const settings = {
+  source: "/test/base",
+  target: "./files",
+  includes: ["src/"],
+  excludes: [],
+}
+`;
+      createTestFiles(tempDir, {
+        'no-valid-export.ts': configContent,
+      });
+
+      const configPath = join(tempDir, 'no-valid-export.ts');
+      await expect(loadConfig(configPath)).rejects.toThrow(
+        /ヒント: 'export default defineConfig\(\{ \.\.\. \}\)' または 'export const config = \{ \.\.\. \}' の形式でエクスポートしてください/,
+      );
+    });
+
     test('相対パスを絶対パスに解決して読み込む', async () => {
       const configContent = `
 export const config = {

@@ -15,6 +15,10 @@ export const DEFAULT_CONFIG_PATH = 'config.ts';
 
 /**
  * 設定ファイルを動的に読み込む
+ *
+ * 優先順位:
+ * 1. default エクスポート（defineConfig パターン推奨）
+ * 2. config 名前付きエクスポート（後方互換性）
  */
 export async function loadConfig(configPath: string): Promise<Config> {
   const absolutePath = resolve(configPath);
@@ -24,10 +28,15 @@ export async function loadConfig(configPath: string): Promise<Config> {
   }
 
   const module = await import(absolutePath);
-  const config = module.config as Config | undefined;
+
+  // 優先順位: default > config（名前付き）
+  const config = (module.default as Config | undefined) ?? (module.config as Config | undefined);
 
   if (!config) {
-    throw new Error(`設定ファイルに config がエクスポートされていません: ${absolutePath}`);
+    throw new Error(
+      `設定ファイルに config がエクスポートされていません: ${absolutePath}\n` +
+      `ヒント: 'export default defineConfig({ ... })' または 'export const config = { ... }' の形式でエクスポートしてください。`,
+    );
   }
 
   return config;
