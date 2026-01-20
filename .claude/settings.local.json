@@ -18,7 +18,9 @@
       "mcp__context7__query-docs",
       "mcp__context7__resolve-library-id",
       "mcp__ide__getDiagnostics",
-      "mcp__jetbrains"
+      "mcp__jetbrains",
+      "Bash(git checkout:*)",
+      "Bash(git stash:*)"
     ],
     "deny": [
       "mcp__jetbrains__execute_run_configuration",
