@@ -3,7 +3,7 @@
  */
 import { describe, expect, test, spyOn, afterEach } from 'bun:test';
 
-import { confirmContinue, createMockReader } from '../UserPrompt';
+import { confirmContinue, createMockReader } from '../UserPrompt.ts';
 
 describe('UserPrompt', () => {
   describe('confirmContinue', () => {

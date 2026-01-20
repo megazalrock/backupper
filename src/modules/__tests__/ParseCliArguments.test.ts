@@ -12,7 +12,7 @@ import {
   parseBackupArgs,
   parseRestoreArgs,
   parseMainArgs,
-} from '../ParseCliArguments';
+} from '../ParseCliArguments.ts';
 
 describe('ParseCliArguments', () => {
   let consoleSpy: Mock<typeof console.log>;

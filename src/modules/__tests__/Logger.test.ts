@@ -1,12 +1,12 @@
 import { describe, test, expect, beforeEach, afterEach, spyOn, type Mock } from 'bun:test';
 
-import type { CopyResult, RestoreFileInfo } from '../../types/result';
+import type { CopyResult, RestoreFileInfo } from '../../types/result.ts';
 import {
   logResult,
   logSummary,
   logRestoreFileList,
   logDryRunFileList,
-} from '../Logger';
+} from '../Logger.ts';
 
 describe('Logger', () => {
   let logSpy: Mock<typeof console.log>;

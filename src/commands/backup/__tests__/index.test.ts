@@ -15,8 +15,8 @@ import {
   createTempDir,
   cleanupTempDir,
   createTestFiles,
-} from '../../../modules/__tests__/helpers/tempDir';
-import { main } from '../index';
+} from '../../../modules/__tests__/helpers/tempDir.ts';
+import { main } from '../index.ts';
 
 describe('commands/backup', () => {
   describe('main', () => {

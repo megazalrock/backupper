@@ -61,6 +61,14 @@ export default tseslint.config(
       ],
       // 重複importの禁止
       'import-x/no-duplicates': 'error',
+      // import文に拡張子を強制
+      'import-x/extensions': [
+        'error',
+        'ignorePackages',
+        {
+          ts: 'always',
+        },
+      ],
     },
   },
 

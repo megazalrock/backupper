@@ -16,8 +16,8 @@ import {
   createTempDir,
   cleanupTempDir,
   createTestFiles,
-} from '../../../modules/__tests__/helpers/tempDir';
-import { main, type MainDependencies } from '../index';
+} from '../../../modules/__tests__/helpers/tempDir.ts';
+import { main, type MainDependencies } from '../index.ts';
 
 // confirmContinue をモックして stdin 待機を回避
 const confirmContinueMock = mock(() => Promise.resolve(true));

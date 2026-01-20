@@ -2,19 +2,19 @@ import { join } from 'node:path';
 
 import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
 
-import type { Config } from '../../types/config';
+import type { Config } from '../../types/config.ts';
 import {
   loadConfig,
   validateConfig,
   validateConfigForRestore,
   DEFAULT_CONFIG_PATH,
-} from '../ConfigLoader';
+} from '../ConfigLoader.ts';
 
 import {
   createTempDir,
   cleanupTempDir,
   createTestFiles,
-} from './helpers/tempDir';
+} from './helpers/tempDir.ts';
 
 describe('ConfigLoader', () => {
   // =====================

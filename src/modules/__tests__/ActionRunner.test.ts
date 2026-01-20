@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeEach, afterEach, spyOn, type Mock } from 'bun:test';
 
-import type { Action } from '../../types/config';
-import { runAction, runPostActions } from '../ActionRunner';
+import type { Action } from '../../types/config.ts';
+import { runAction, runPostActions } from '../ActionRunner.ts';
 
 describe('ActionRunner', () => {
   let logSpy: Mock<typeof console.log>;

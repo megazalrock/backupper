@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
 
-import type { Config } from '../../types/config';
+import type { Config } from '../../types/config.ts';
 import {
   isGlobPattern,
   shouldExclude,
@@ -9,13 +9,13 @@ import {
   resolveTargetFiles,
   resolveRestoreFiles,
   findOrphanedFiles,
-} from '../FileResolver';
+} from '../FileResolver.ts';
 
 import {
   createTempDir,
   cleanupTempDir,
   createTestFiles,
-} from './helpers/tempDir';
+} from './helpers/tempDir.ts';
 
 describe('FileResolver', () => {
   // =====================

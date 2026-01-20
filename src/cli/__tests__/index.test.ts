@@ -15,8 +15,8 @@ import {
   createTempDir,
   cleanupTempDir,
   createTestFiles,
-} from '../../modules/__tests__/helpers/tempDir';
-import { runCli } from '../index';
+} from '../../modules/__tests__/helpers/tempDir.ts';
+import { runCli } from '../index.ts';
 
 describe('cli/index', () => {
   describe('runCli', () => {

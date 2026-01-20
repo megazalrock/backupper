@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'bun:test';
 
-import { convertDotPath, revertDotPath } from '../PathConverter';
+import { convertDotPath, revertDotPath } from '../PathConverter.ts';
 
 describe('PathConverter', () => {
   describe('convertDotPath', () => {
