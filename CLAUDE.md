@@ -118,6 +118,20 @@ bun run cli restore [オプション]
 - 型名は `PascalCase` で記述する
 - `index.ts` は全て小文字で記述する
 
+## importパス
+
+- **相対パス**を使用する（パスエイリアス `@/` 等は使用しない）
+- **拡張子 `.ts` を必ず付与**する（ESLintの `import-x/extensions` ルールで強制）
+
+```typescript
+// 正しい例
+import { foo } from '../modules/Foo.ts';
+import type { Config } from '../../types/config.ts';
+
+// 誤った例（拡張子なし）
+import { foo } from '../modules/Foo';
+```
+
 ## ツール
 
 - ユーザーに選択肢を選ばせる場合は `AskUserQuestion` を利用する
