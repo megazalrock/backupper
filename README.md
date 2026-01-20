@@ -1,6 +1,13 @@
-# docs
+# backupper
 
-`arrangement-env/front` 内の指定ファイルを `./files/` にコピーし、Git で管理するためのリポジトリです。
+指定したディレクトリのファイルをバックアップ・リストアするためのCLIツールです。
+
+## 機能
+
+- **バックアップ**: 指定したファイル/ディレクトリを `./files/` にコピー
+- **リストア**: バックアップしたファイルを元の場所に復元
+- **パス変換**: ドットで始まるパスを `dot__` 形式に変換してgit管理を容易化
+- **後処理**: backup/restore 後に任意のシェルコマンドを実行可能
 
 ## インストール
 
@@ -8,59 +15,114 @@
 bun install
 ```
 
-## 使用方法
+## セットアップ
+
+1. `config.example.ts` を `config.ts` にコピー
+2. `config.ts` を編集して設定をカスタマイズ
 
 ```bash
-bun run scripts/backup.ts
+cp config.example.ts config.ts
 ```
 
-## 設定ファイル仕様（config.ts）
+## 使用方法
 
-### 構造
+### バックアップ
+
+```bash
+bun run backup
+```
+
+### リストア
+
+```bash
+bun run restore
+```
+
+### CLIオプション
+
+#### backup コマンド
+
+| オプション | 短縮形 | 説明 |
+|-----------|--------|------|
+| `--config <パス>` | `-c` | 設定ファイルのパスを指定 |
+| `--help` | `-h` | ヘルプを表示 |
+
+#### restore コマンド
+
+| オプション | 短縮形 | 説明 |
+|-----------|--------|------|
+| `--config <パス>` | `-c` | 設定ファイルのパスを指定 |
+| `--dry-run` | - | 実行内容を表示するのみ（実際には実行しない） |
+| `--force` | `-f` | 確認プロンプトをスキップして実行 |
+| `--help` | `-h` | ヘルプを表示 |
+
+## 設定ファイル（config.ts）
 
 ```typescript
-export const config = {
-  base: string,        // コピー元のベースパス
-  includes: string[], // コピー対象（ファイルまたはディレクトリ）
-  excludes: string[],   // 除外パターン
-}
+import type { Config } from 'src/types/config.ts';
+
+export const config: Config = {
+  source: '/path/to/source',  // コピー元のベースパス
+  target: 'files',            // コピー先ディレクトリ
+  includes: [
+    '.claude/',               // ディレクトリ全体（末尾 / ）
+    '.mcp.json',              // 単一ファイル
+    'src/**/*.ts',            // globパターン
+  ],
+  excludes: [
+    'node_modules',
+    '*.log',
+    '.DS_Store',
+  ],
+  // バックアップ固有の設定
+  backup: {
+    sync: false,              // true: ソースに存在しないファイルをターゲットから削除
+  },
+  // リストア固有の設定
+  restore: {
+    preserveOriginal: false,  // true: 既存ファイルを.bakとして保存
+  },
+};
 ```
 
 ### 設定項目
 
 | 項目 | 型 | 説明 |
 |------|-----|------|
-| `base` | `string` | コピー元のベースパス（絶対パス） |
-| `includes` | `string[]` | コピー対象の相対パス。末尾が `/` の場合はディレクトリ全体 |
+| `source` | `string` | コピー元のベースパス（絶対パス） |
+| `target` | `string` | コピー先ディレクトリ |
+| `includes` | `string[]` | コピー対象のパス（ファイル、ディレクトリ、globパターン） |
 | `excludes` | `string[]` | 除外するファイル/ディレクトリのパターン |
+| `backup.sync` | `boolean` | ソースに存在しないファイルをターゲットから削除 |
+| `restore.preserveOriginal` | `boolean` | リストア時に既存ファイルを `.bak` として保存 |
 
-### 設定例
+### パス指定方法
 
-```typescript
-export const config = {
-  base: "/Users/otto/workspace/craftbank/arrangement-env/front",
-  includes: [
-    ".claude/",           // ディレクトリ全体
-    ".mgzl/",             // ディレクトリ全体
-  ],
-  excludes: [
-    "node_modules",
-    "*.log",
-    ".DS_Store",
-  ],
-}
+- **単一ファイル**: `"config.ts"`
+- **ディレクトリ全体**: `".claude/"` （末尾に `/`）
+- **globパターン**: `"src/**/*.ts"`, `"*.json"`
+
+## テスト
+
+```bash
+bun run test              # テストを実行
+bun run test:coverage     # カバレッジつきで実行
+bun run test:watch        # ウォッチモードで実行
 ```
 
-### 動作仕様
+## リンター
 
-- **コピー先**: `./files/` 固定
-- **ディレクトリ構造**: 階層を維持してコピー
-  - 例: `.claude/settings.local.json` → `files/.claude/settings.local.json`
-- **対象の指定方法**:
-  - ファイル単体: `".claude/settings.local.json"`
-  - ディレクトリ全体: `".claude/"` （末尾に `/`）
-- **除外パターン**: glob形式で指定可能
+```bash
+bun run lint              # ESLintチェックを実行
+bun run lint:fix          # ESLint自動修正を実行
+```
 
-### テスト
+## 技術スタック
 
-[テスト方針 @docs/testing-guidelines.md](docs/testing-guidelines.md) を参照
+- 言語: TypeScript
+- 実行環境: Bun
+- リンター: ESLint
+
+## ライセンス
+
+Private
