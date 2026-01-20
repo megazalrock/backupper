@@ -5,8 +5,16 @@ import {
   beforeEach,
   afterEach,
   spyOn,
+  mock,
   type Mock,
 } from "bun:test"
+
+// confirmContinue をモックして stdin 待機を回避
+const confirmContinueMock = mock(() => Promise.resolve(true))
+mock.module("../../../modules/UserPrompt.ts", () => ({
+  confirmContinue: confirmContinueMock,
+}))
+
 import { main } from "../index"
 import {
   createTempDir,
@@ -438,18 +446,14 @@ export const config = {
 `
         createTestFiles(tempDir, { "config.ts": configContent })
 
-        // stdin がないためエラーになるが、プロンプト表示はされる
-        // ここでは process.stdout.write が呼ばれたかで確認
-        try {
-          await main(["--config", join(tempDir, "config.ts")])
-        } catch {
-          // stdin の読み取りに失敗するか、入力待ちで止まる可能性がある
-        }
+        // モックの呼び出し回数をリセット
+        confirmContinueMock.mockClear()
 
-        // プロンプトメッセージが表示されようとしたことを確認
-        expect(stdoutWriteSpy).toHaveBeenCalledWith(
-          expect.stringContaining("続行しますか")
-        )
+        // モックがtrueを返すので正常に処理が進む
+        await main(["--config", join(tempDir, "config.ts")])
+
+        // confirmContinue が呼ばれたことを確認（確認プロンプト表示を意図）
+        expect(confirmContinueMock).toHaveBeenCalled()
       })
     })
   })
