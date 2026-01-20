@@ -1,4 +1,34 @@
 /**
+ * 実行するshellコマンドの定義
+ */
+export interface Action {
+  /**
+   * コマンド名
+   *
+   * @example 'git'
+   */
+  command: string,
+  /**
+   * コマンド引数
+   *
+   * @example ['add', '-A']
+   */
+  args: string[],
+  /**
+   * 環境変数
+   *
+   * @example { GIT_AUTHOR_NAME: 'backupper' }
+   */
+  env?: Record<string, string>,
+
+  /**
+   * 実行するディレクトリ
+   * @default リストア時はConfig.source、バックアップ時はConfig.target
+   */
+  cwd?: string
+}
+
+/**
  * バックアップ固有の設定
  */
 export interface BackupOptions {
@@ -8,6 +38,10 @@ export interface BackupOptions {
    * @default false
    */
   sync?: boolean
+  /**
+   * バックアップ実行後に実行されるコマンド
+   */
+  postRunActions?: Action[]
 }
 
 /**
@@ -20,6 +54,10 @@ export interface RestoreOptions {
    * @default false
    */
   preserveOriginal?: boolean
+  /**
+   * リストア実行後に実行されるコマンド
+   */
+  postRunActions?: Action[]
 }
 
 /**
