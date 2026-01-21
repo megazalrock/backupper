@@ -5,7 +5,7 @@ import { defineConfig } from './src/types/config.ts';
  */
 export default defineConfig({
   source: '/Users/otto/workspace/craftbank/arrangement-env/front',
-  target: 'files',
+  destination: 'files',
   includes: [
     // ディレクトリ全体（末尾 / ）
     '.claude/',

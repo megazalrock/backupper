@@ -80,7 +80,7 @@ describe('commands/restore', () => {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["test.txt"],
   excludes: [],
 }
@@ -109,7 +109,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["src/"],
   excludes: [],
 }
@@ -137,7 +137,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["file.txt"],
   excludes: [],
 }
@@ -198,7 +198,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["src/"],
   excludes: [],
 }
@@ -228,7 +228,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["existing.txt"],
   excludes: [],
 }
@@ -256,7 +256,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["new-file.txt"],
   excludes: [],
 }
@@ -290,7 +290,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["src/"],
   excludes: [],
 }
@@ -319,7 +319,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: [".gitignore", ".env"],
   excludes: [],
 }
@@ -347,7 +347,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["deep/"],
   excludes: [],
 }
@@ -376,7 +376,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["file.txt"],
   excludes: [],
   restore: {
@@ -411,7 +411,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["new-file.txt"],
   excludes: [],
   restore: {
@@ -446,7 +446,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["file.txt"],
   excludes: [],
 }
@@ -472,7 +472,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["file.txt"],
   excludes: [],
 }

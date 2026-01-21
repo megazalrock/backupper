@@ -50,7 +50,7 @@ export function validateConfig(cfg: Config): void {
     throw new Error(`ベースパスが存在しません: ${cfg.source}`);
   }
 
-  if (!cfg.target || cfg.target.trim() === '') {
+  if (!cfg.destination || cfg.destination.trim() === '') {
     throw new Error('outputDir が指定されていません');
   }
 }
@@ -65,11 +65,11 @@ export function validateConfigForRestore(cfg: Config): void {
     throw new Error(`ベースパスが存在しません: ${cfg.source}`);
   }
 
-  if (!cfg.target || cfg.target.trim() === '') {
+  if (!cfg.destination || cfg.destination.trim() === '') {
     throw new Error('outputDir が指定されていません');
   }
 
-  if (!existsSync(cfg.target)) {
-    throw new Error(`出力ディレクトリが存在しません: ${cfg.target}`);
+  if (!existsSync(cfg.destination)) {
+    throw new Error(`出力ディレクトリが存在しません: ${cfg.destination}`);
   }
 }

@@ -86,7 +86,7 @@ describe('cli/index', () => {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["file.txt"],
   excludes: [],
 }
@@ -130,7 +130,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["file.txt"],
   excludes: [],
 }

@@ -163,7 +163,7 @@ describe('FileResolver', () => {
 
         const config: Config = {
           source: tempDir,
-          target: `${tempDir}/output`,
+          destination: `${tempDir}/output`,
           includes: ['src/'],
           excludes: [],
         };
@@ -181,7 +181,7 @@ describe('FileResolver', () => {
 
         const config: Config = {
           source: tempDir,
-          target: `${tempDir}/output`,
+          destination: `${tempDir}/output`,
           includes: ['**/*.ts'],
           excludes: [],
         };
@@ -198,7 +198,7 @@ describe('FileResolver', () => {
 
         const config: Config = {
           source: tempDir,
-          target: `${tempDir}/output`,
+          destination: `${tempDir}/output`,
           includes: ['config.json'],
           excludes: [],
         };
@@ -214,7 +214,7 @@ describe('FileResolver', () => {
 
         const config: Config = {
           source: tempDir,
-          target: `${tempDir}/output`,
+          destination: `${tempDir}/output`,
           includes: ['exists.txt', 'nonexistent.txt'],
           excludes: [],
         };
@@ -234,7 +234,7 @@ describe('FileResolver', () => {
 
         const config: Config = {
           source: `${tempDir}/base`,
-          target: `${tempDir}/output`,
+          destination: `${tempDir}/output`,
           includes: ['src/'],
           excludes: [],
         };
@@ -252,7 +252,7 @@ describe('FileResolver', () => {
 
         const config: Config = {
           source: `${tempDir}/base`,
-          target: `${tempDir}/output`,
+          destination: `${tempDir}/output`,
           includes: ['src/'],
           excludes: ['*.test.ts'],
         };
@@ -270,7 +270,7 @@ describe('FileResolver', () => {
 
         const config: Config = {
           source: `${tempDir}/base`,
-          target: `${tempDir}/output`,
+          destination: `${tempDir}/output`,
           includes: ['.gitignore', '.env'],
           excludes: [],
         };
@@ -288,7 +288,7 @@ describe('FileResolver', () => {
 
         const config: Config = {
           source: `${tempDir}/base`,
-          target: `${tempDir}/output`,
+          destination: `${tempDir}/output`,
           includes: ['**/*.ts'],
           excludes: [],
         };
@@ -308,7 +308,7 @@ describe('FileResolver', () => {
         const sourceFiles = ['index.ts'];
         const config: Config = {
           source: `${tempDir}/source`,
-          target: `${tempDir}/target`,
+          destination: `${tempDir}/target`,
           includes: ['**/*.ts'],
           excludes: [],
         };
@@ -326,7 +326,7 @@ describe('FileResolver', () => {
         const sourceFiles = ['config.json'];
         const config: Config = {
           source: `${tempDir}/source`,
-          target: `${tempDir}/target`,
+          destination: `${tempDir}/target`,
           includes: ['config.json', 'orphan.json'],
           excludes: [],
         };

@@ -23,7 +23,7 @@ export interface Action {
 
   /**
    * 実行するディレクトリ
-   * @default リストア時はConfig.source、バックアップ時はConfig.target
+   * @default リストア時はConfig.source、バックアップ時はConfig.destination
    */
   cwd?: string
 }
@@ -67,7 +67,7 @@ export interface Config {
   /** コピー元のディレクトリ（絶対パス） */
   source: string
   /** コピー先の出力ディレクトリ（相対パスまたは絶対パス） */
-  target: string
+  destination: string
   /**
    * コピー対象の相対パス
    * - 末尾が `/` の場合はディレクトリ全体
@@ -95,7 +95,7 @@ export interface Config {
  *
  * export default defineConfig({
  *   source: '/path/to/source',
- *   target: './files',
+ *   destination: './files',
  *   includes: ['.claude/', 'config.ts'],
  *   excludes: ['node_modules'],
  * });

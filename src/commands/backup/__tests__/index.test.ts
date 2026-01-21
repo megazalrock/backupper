@@ -61,7 +61,7 @@ describe('commands/backup', () => {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["test.txt"],
   excludes: [],
 }
@@ -121,7 +121,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["file1.txt", "file2.txt"],
   excludes: [],
 }
@@ -153,7 +153,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["src/"],
   excludes: [],
 }
@@ -180,7 +180,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["**/*.ts"],
   excludes: [],
 }
@@ -207,7 +207,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["src/"],
   excludes: ["*.test.ts", "__tests__"],
 }
@@ -233,7 +233,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: [".gitignore", ".env"],
   excludes: [],
 }
@@ -260,7 +260,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["file.txt"],
   excludes: [],
 }
@@ -295,7 +295,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["src/"],
   excludes: [],
   backup: {
@@ -325,7 +325,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["src/"],
   excludes: [],
   backup: {
@@ -354,7 +354,7 @@ export const config = {
         const configContent = `
 export const config = {
   source: "${sourceDir}",
-  target: "${targetDir}",
+  destination: "${targetDir}",
   includes: ["src/"],
   excludes: [],
   backup: {

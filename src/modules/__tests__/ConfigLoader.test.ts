@@ -52,7 +52,7 @@ describe('ConfigLoader', () => {
       const configContent = `
 export const config = {
   source: "/test/base",
-  target: "./files",
+  destination: "./files",
   includes: ["src/"],
   excludes: ["node_modules/"],
 }
@@ -64,7 +64,7 @@ export const config = {
       const result = await loadConfig(join(tempDir, 'valid-config.ts'));
       expect(result).toEqual({
         source: '/test/base',
-        target: './files',
+        destination: './files',
         includes: ['src/'],
         excludes: ['node_modules/'],
       });
@@ -74,7 +74,7 @@ export const config = {
       const configContent = `
 export const settings = {
   source: "/test/base",
-  target: "./files",
+  destination: "./files",
   includes: ["src/"],
   excludes: [],
 }
@@ -93,7 +93,7 @@ export const settings = {
       const configContent = `
 export default {
   source: "/test/default-export",
-  target: "./files",
+  destination: "./files",
   includes: ["lib/"],
   excludes: ["dist/"],
 }
@@ -105,7 +105,7 @@ export default {
       const result = await loadConfig(join(tempDir, 'default-export-config.ts'));
       expect(result).toEqual({
         source: '/test/default-export',
-        target: './files',
+        destination: './files',
         includes: ['lib/'],
         excludes: ['dist/'],
       });
@@ -115,14 +115,14 @@ export default {
       const configContent = `
 export default {
   source: "/test/default-wins",
-  target: "./default-files",
+  destination: "./default-files",
   includes: ["default/"],
   excludes: [],
 }
 
 export const config = {
   source: "/test/named-export",
-  target: "./named-files",
+  destination: "./named-files",
   includes: ["named/"],
   excludes: [],
 }
@@ -133,14 +133,14 @@ export const config = {
 
       const result = await loadConfig(join(tempDir, 'both-exports-config.ts'));
       expect(result.source).toBe('/test/default-wins');
-      expect(result.target).toBe('./default-files');
+      expect(result.destination).toBe('./default-files');
     });
 
     test('default も config もない場合、ヒント付きエラーをスローする', async () => {
       const configContent = `
 export const settings = {
   source: "/test/base",
-  target: "./files",
+  destination: "./files",
   includes: ["src/"],
   excludes: [],
 }
@@ -159,7 +159,7 @@ export const settings = {
       const configContent = `
 export const config = {
   source: "/resolved/path",
-  target: "./out",
+  destination: "./out",
   includes: [],
   excludes: [],
 }
@@ -192,7 +192,7 @@ export const config = {
     test('有効な設定の場合、エラーをスローしない', () => {
       const validConfig: Config = {
         source: tempDir, // 存在するディレクトリ
-        target: './files',
+        destination: './files',
         includes: ['src/'],
         excludes: [],
       };
@@ -203,7 +203,7 @@ export const config = {
     test('base が存在しない場合、エラーをスローする', () => {
       const invalidConfig: Config = {
         source: '/nonexistent/path/to/base',
-        target: './files',
+        destination: './files',
         includes: ['src/'],
         excludes: [],
       };
@@ -216,7 +216,7 @@ export const config = {
     test('outputDir が空文字の場合、エラーをスローする', () => {
       const invalidConfig: Config = {
         source: tempDir,
-        target: '',
+        destination: '',
         includes: ['src/'],
         excludes: [],
       };
@@ -229,7 +229,7 @@ export const config = {
     test('outputDir が空白のみの場合、エラーをスローする', () => {
       const invalidConfig: Config = {
         source: tempDir,
-        target: '   ',
+        destination: '   ',
         includes: ['src/'],
         excludes: [],
       };
@@ -263,7 +263,7 @@ export const config = {
 
       const validConfig: Config = {
         source: join(tempDir, 'base'),
-        target: join(tempDir, 'files'),
+        destination: join(tempDir, 'files'),
         includes: ['src/'],
         excludes: [],
       };
@@ -278,7 +278,7 @@ export const config = {
 
       const invalidConfig: Config = {
         source: '/nonexistent/base/path',
-        target: join(tempDir, 'files'),
+        destination: join(tempDir, 'files'),
         includes: ['src/'],
         excludes: [],
       };
@@ -295,7 +295,7 @@ export const config = {
 
       const invalidConfig: Config = {
         source: join(tempDir, 'base'),
-        target: '',
+        destination: '',
         includes: ['src/'],
         excludes: [],
       };
@@ -312,7 +312,7 @@ export const config = {
 
       const invalidConfig: Config = {
         source: join(tempDir, 'base'),
-        target: join(tempDir, 'nonexistent-output'),
+        destination: join(tempDir, 'nonexistent-output'),
         includes: ['src/'],
         excludes: [],
       };
@@ -329,7 +329,7 @@ export const config = {
 
       const invalidConfig: Config = {
         source: join(tempDir, 'base'),
-        target: '   ',
+        destination: '   ',
         includes: ['src/'],
         excludes: [],
       };

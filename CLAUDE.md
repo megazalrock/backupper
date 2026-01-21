@@ -91,7 +91,7 @@ bun run cli restore [オプション]
 - **ディレクトリ全体**: `".claude/"` （末尾に `/`）
 - **globパターン**: `"src/**/*.ts"`, `"*.json"`
 - **除外**: `excludes` パターンでフィルタリング
-- **同期モード**: `config.backup.sync = true` でソースに存在しないファイルをターゲットから削除
+- **同期モード**: `config.backup.sync = true` でソースに存在しないファイルを出力先から削除
 
 ### リストア機能
 

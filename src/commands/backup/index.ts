@@ -158,7 +158,7 @@ export async function main(cliArgs?: string[]): Promise<void> {
     // パス変換
     const convertedPath = convertDotPath(relativePath);
     const sourcePath = join(config.source, relativePath);
-    const destPath = join(config.target, convertedPath);
+    const destPath = join(config.destination, convertedPath);
 
     // コピー実行
     const result = await copyFile(sourcePath, destPath);
@@ -177,7 +177,7 @@ export async function main(cliArgs?: string[]): Promise<void> {
       console.log(`削除対象ファイル数: ${orphanedFiles.length}`);
 
       for (const orphanedFile of orphanedFiles) {
-        const filePath = join(config.target, orphanedFile);
+        const filePath = join(config.destination, orphanedFile);
         const result = deleteFile(filePath);
         deleteResults.push(result);
         logDeleteResult(result);
@@ -185,7 +185,7 @@ export async function main(cliArgs?: string[]): Promise<void> {
         // 削除成功時、空になったディレクトリを削除
         if (result.success) {
           const parentDir = dirname(filePath);
-          removeEmptyDirectories(parentDir, config.target);
+          removeEmptyDirectories(parentDir, config.destination);
         }
       }
     }
@@ -199,5 +199,5 @@ export async function main(cliArgs?: string[]): Promise<void> {
   }
 
   // 8. 後処理を実行
-  await runPostActions(config.backup?.postRunActions, config.target);
+  await runPostActions(config.backup?.postRunActions, config.destination);
 }

@@ -222,7 +222,7 @@ export async function main(
   const results: CopyResult[] = [];
 
   for (const fileInfo of fileInfos) {
-    const sourcePath = join(config.target, fileInfo.backupPath);
+    const sourcePath = join(config.destination, fileInfo.backupPath);
     const destPath = join(config.source, fileInfo.originalPath);
 
     const { result, backupPath } = await restoreFile(

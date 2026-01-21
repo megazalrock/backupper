@@ -127,7 +127,7 @@ export function resolveTargetFiles(cfg: Config): string[] {
  */
 export function resolveRestoreFiles(cfg: Config): string[] {
   // outputDir内の全ファイルを取得
-  const allFiles = getFilesRecursively(cfg.target, cfg.target);
+  const allFiles = getFilesRecursively(cfg.destination, cfg.destination);
   const matchedFiles: string[] = [];
 
   for (const file of allFiles) {
@@ -181,7 +181,7 @@ export function findOrphanedFiles(
   const sourceSet = new Set(sourceFiles.map((file) => convertDotPath(file)));
 
   // ターゲットディレクトリ内の全ファイルを取得
-  const targetFiles = getFilesRecursively(config.target, config.target);
+  const targetFiles = getFilesRecursively(config.destination, config.destination);
 
   const orphanedFiles: string[] = [];
 
