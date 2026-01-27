@@ -1,0 +1,17 @@
+{
+  "destination": "./files",
+  "includes": [
+    "some/directory/**/*",
+    "some-file.json"
+  ],
+  "excludes": [
+    ".DS_Store",
+    "Thumbs.db"
+  ],
+  "backup": {
+    "sync": false
+  },
+  "restore": {
+    "preserveOriginal": false
+  }
+}

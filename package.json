@@ -1,0 +1,64 @@
+{
+  "name": "@megazalrock/backupper",
+  "version": "0.0.1",
+  "description": "A CLI tool for backing up and restoring specified files and directories using Bun",
+  "author": "megazalrock",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/megazalrock/backupper.git"
+  },
+  "module": "index.ts",
+  "main": "./src/index.ts",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "backupper": "./src/bin.ts"
+  },
+  "keywords": [
+    "backup",
+    "restore",
+    "cli",
+    "file-sync",
+    "bun"
+  ],
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "homepage": "https://github.com/megazalrock/backupper#readme",
+  "bugs": {
+    "url": "https://github.com/megazalrock/backupper/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src",
+    "!src/**/__tests__",
+    "!src/**/*.test.ts",
+    "backupper.config.example.ts",
+    "backupper.config.example.json",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "bun build ./src/bin.ts --minify --compile --outfile dist/backupper",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage",
+    "test:watch": "bun test --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@stylistic/eslint-plugin": "^5.7.0",
+    "@types/bun": "latest",
+    "eslint": "^9.39.2",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import-x": "^4.16.1",
+    "jiti": "^2.6.1",
+    "typescript-eslint": "^8.53.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
