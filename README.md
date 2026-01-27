@@ -40,25 +40,19 @@ cp backupper.config.example.ts backupper.config.ts
 ### バックアップ
 
 ```bash
-bun run backup
+npx @megazalrock/backupper backup
 ```
-
-### リストア
-
-```bash
-bun run restore
-```
-
-### CLIオプション
-
-#### backup コマンド
 
 | オプション | 短縮形 | 説明 |
 |-----------|--------|------|
 | `--config <パス>` | `-c` | 設定ファイルのパスを指定 |
 | `--help` | `-h` | ヘルプを表示 |
 
-#### restore コマンド
+### リストア
+
+```bash
+npx @megazalrock/backupper restore
+```
 
 | オプション | 短縮形 | 説明 |
 |-----------|--------|------|
@@ -66,6 +60,7 @@ bun run restore
 | `--dry-run` | - | 実行内容を表示するのみ（実際には実行しない） |
 | `--force` | `-f` | 確認プロンプトをスキップして実行 |
 | `--help` | `-h` | ヘルプを表示 |
+
 
 ## 設定ファイル（backupper.config.ts）
 
