@@ -1,6 +1,6 @@
 {
   "name": "@megazalrock/backupper",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A CLI tool for backing up and restoring specified files and directories using Bun",
   "author": "megazalrock",
   "repository": {
