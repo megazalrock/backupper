@@ -83,10 +83,18 @@ export default defineConfig({
   // バックアップ固有の設定
   backup: {
     sync: false,                  // true: ソースに存在しないファイルをターゲットから削除
+    postRunActions: [             // バックアップ後に実行するコマンド
+      { command: 'git', args: ['add', '-A'] },
+      { command: 'git', args: ['commit', '-m', 'backup'] },
+    ],
   },
   // リストア固有の設定
   restore: {
     preserveOriginal: false,      // true: 既存ファイルを.bakとして保存
+    postRunActions: [             // リストア後に実行するコマンド
+      { command: 'git', args: ['add', '-A'] },
+      { command: 'git', args: ['commit', '-m', 'restore'] },
+    ],
   },
 });
 ```
@@ -100,13 +108,45 @@ export default defineConfig({
 | `includes` | `string[]` | コピー対象のパス（ファイル、ディレクトリ、globパターン） |
 | `excludes` | `string[]` | 除外するファイル/ディレクトリのパターン |
 | `backup.sync` | `boolean` | ソースに存在しないファイルをターゲットから削除 |
+| `backup.postRunActions` | `Action[]` | バックアップ実行後に実行するコマンド |
 | `restore.preserveOriginal` | `boolean` | リストア時に既存ファイルを `.bak` として保存 |
+| `restore.postRunActions` | `Action[]` | リストア実行後に実行するコマンド |
 
 ### パス指定方法
 
 - **単一ファイル**: `"config.ts"`
 - **ディレクトリ全体**: `".claude/"` （末尾に `/`）
 - **globパターン**: `"src/**/*.ts"`, `"*.json"`
+
+### postRunActions
+
+バックアップ・リストア実行後に任意のシェルコマンドを実行できます。`Action` オブジェクトの配列で指定します。
+
+#### Action オブジェクト
+
+| プロパティ | 型 | 必須 | 説明 |
+|-----------|-----|------|------|
+| `command` | `string` | ✓ | 実行するコマンド名 |
+| `args` | `string[]` | ✓ | コマンド引数 |
+| `env` | `Record<string, string>` | - | 環境変数 |
+| `cwd` | `string` | - | 実行ディレクトリ（デフォルト: バックアップ時は `destination`、リストア時は `source`） |
+
+#### 使用例
+
+バックアップ後にgitで自動コミットする例:
+
+```typescript
+backup: {
+  postRunActions: [
+    { command: 'git', args: ['add', '-A'] },
+    {
+      command: 'git',
+      args: ['commit', '-m', 'chore: backup'],
+      env: { GIT_AUTHOR_NAME: 'backupper' },
+    },
+  ],
+},
+```
 
 ## テスト
 
